@@ -1,1 +1,48 @@
-/*# sourceMappingURL=style.css.map */
+#head-navbar {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  background-color: #f8f9fa;
+}
+#head-navbar .nav-link {
+  padding: 20px;
+  text-align: center;
+}
+
+.material-symbols-outlined {
+  vertical-align: middle;
+  padding-bottom: 3px;
+}
+
+#media-container {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid lightgrey;
+  margin: 20px;
+  border-radius: 10px;
+}
+
+.card {
+  margin: 10px;
+  width: 20rem;
+  height: 20rem;
+}
+.card .card-date {
+  color: grey;
+}
+.card .card-rating {
+  color: grey;
+  margin: 0;
+  padding: 0;
+}
+.card .checked {
+  color: orange;
+}
+.card .card-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 20px;
+}
+.card .card-buttons > .btn {
+  border-radius: 0;
+}/*# sourceMappingURL=style.css.map */
