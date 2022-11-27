@@ -54,6 +54,9 @@
 }
 .card .card-buttons {
   position: absolute;
+  align-items: end;
+  border-top: lightgrey 1px solid;
+  height: 85px;
   width: 100%;
   display: grid;
   left: 0;
@@ -63,4 +66,6 @@
 }
 .card .card-buttons > .btn {
   border-radius: 0;
+  height: 50%;
+  bottom: 0;
 }/*# sourceMappingURL=style.css.map */
