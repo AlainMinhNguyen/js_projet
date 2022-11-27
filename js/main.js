@@ -41,7 +41,7 @@ function displayCollection(collection) {
         }
 
         html += `
-        <div class="card card-`+element.getType()+`">
+        <div class="card card-`+ element.getType() + `">
         <img class="card-img-top"
             src="`+ element.image + `"
             alt="Card image cap">
@@ -57,8 +57,8 @@ function displayCollection(collection) {
             </p>
             <div class="card-buttons">
                 <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
-                        edit
-                    </span> edit</a>
+                    edit_square
+                </span> edit</a>
                 <a href="#" class="btn btn-primary"><span class="material-symbols-outlined">
                         delete
                     </span> remove</a>
