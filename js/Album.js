@@ -6,6 +6,6 @@ export class Album extends Media {
     }
 
     getType() {
-        return "Album";
+        return "album";
     }
 }

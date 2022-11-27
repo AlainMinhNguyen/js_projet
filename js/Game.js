@@ -6,6 +6,6 @@ export class Game extends Media {
     }
 
     getType() {
-        return "Game";
+        return "game";
     }
 }

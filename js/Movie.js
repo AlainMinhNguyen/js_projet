@@ -6,6 +6,6 @@ export class Movie extends Media {
     }
 
     getType() {
-        return "Movie";
+        return "movie";
     }
 }
