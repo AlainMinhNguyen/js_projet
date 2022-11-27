@@ -1,7 +1,11 @@
 import { Media } from "./Media.js";
 
 export class Movie extends Media {
-    constructor(image, title, description, rating, runtime) {
-        super(image, title, description, rating);
+    constructor(image, title, date, description, rating) {
+        super(image, title, date, description, rating);
+    }
+
+    getType() {
+        return "Movie";
     }
 }
