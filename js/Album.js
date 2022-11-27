@@ -1,4 +1,4 @@
-import { Media } from "./Media";
+import { Media } from "./Media.js";
 
 export class Album extends Media {
     constructor(image, title, description, rating, runtime) {
