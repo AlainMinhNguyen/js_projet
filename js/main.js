@@ -26,13 +26,13 @@ function displayCollection(collection) {
         year = ("0" + element.date.getFullYear()).slice(-4);
 
         switch (element.getType()) {
-            case "Album":
+            case "album":
                 icon = "music_note";
                 break;
-            case "Game":
+            case "game":
                 icon = "sports_esports";
                 break;
-            case "Movie":
+            case "movie":
                 icon = "movie";
                 break;
             default:
@@ -41,7 +41,7 @@ function displayCollection(collection) {
         }
 
         html += `
-        <div class="card `+element.getType()+`">
+        <div class="card card-`+element.getType()+`">
         <img class="card-img-top"
             src="`+ element.image + `"
             alt="Card image cap">
@@ -114,3 +114,47 @@ myCollection.items.forEach(element => {
 });
 
 displayCollection(myCollection);
+
+document.getElementById('navAll').addEventListener('click', function () {
+    console.log('All');
+    document.getElementById('navAlbums').classList.remove('selected');
+    document.getElementById('navGames').classList.remove('selected');
+    document.getElementById('navMovies').classList.remove('selected');
+    document.getElementById('navAll').classList.add('selected');
+    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'block');
+    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'block');
+    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'block');
+});
+
+document.getElementById('navAlbums').addEventListener('click', function () {
+    console.log('Albums');
+    document.getElementById('navAll').classList.remove('selected');
+    document.getElementById('navGames').classList.remove('selected');
+    document.getElementById('navMovies').classList.remove('selected');
+    document.getElementById('navAlbums').classList.add('selected');
+    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'block');
+    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'none');
+    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'none');
+});
+
+document.getElementById('navGames').addEventListener('click', function () {
+    console.log('Games');
+    document.getElementById('navAll').classList.remove('selected');
+    document.getElementById('navAlbums').classList.remove('selected');
+    document.getElementById('navMovies').classList.remove('selected');
+    document.getElementById('navGames').classList.add('selected');
+    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'none');
+    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'block');
+    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'none');
+});
+
+document.getElementById('navMovies').addEventListener('click', function () {
+    console.log('Movies');
+    document.getElementById('navAll').classList.remove('selected');
+    document.getElementById('navAlbums').classList.remove('selected');
+    document.getElementById('navGames').classList.remove('selected');
+    document.getElementById('navMovies').classList.add('selected');
+    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'none');
+    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'none');
+    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'block');
+});

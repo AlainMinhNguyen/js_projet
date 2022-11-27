@@ -6,10 +6,23 @@ $c-light: #f8f9fa;
     justify-content: space-between;
     background-color: $c-light;
 
+    .navbar{
+        padding: 0;
+        margin: 0;
+    }
+
     .nav-link {
         padding: 20px;
+        height: 100%;
         text-align: center;
+        border-bottom: 5px solid lightgrey;
     }
+
+    .selected {
+        border-bottom: 5px solid black;
+    }
+
+    box-shadow:0px -5px 0px 0px lightgrey inset;
 }
 
 .material-symbols-outlined {
@@ -28,13 +41,18 @@ $c-light: #f8f9fa;
 .card {
     margin: 10px;
     width: 20rem;
-    height: 20rem;
+
+    .card-text {
+        margin-bottom: 80px;
+    }
 
     .card-date {
         color: grey;
     }
 
     .card-rating {
+        position: absolute;
+        bottom: 50px;
         color: grey;
         margin: 0;
         padding: 0;
@@ -45,9 +63,13 @@ $c-light: #f8f9fa;
     }
 
     .card-buttons{
+        position: absolute;
+        width: 100%;
         display: grid;
+        left: 0;
         grid-template-columns: 1fr 1fr;
         margin-top: 20px;
+        bottom: 0;
         & > .btn {
             border-radius: 0;
         }

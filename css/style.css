@@ -3,10 +3,20 @@
   width: 100%;
   justify-content: space-between;
   background-color: #f8f9fa;
+  box-shadow: 0px -5px 0px 0px lightgrey inset;
+}
+#head-navbar .navbar {
+  padding: 0;
+  margin: 0;
 }
 #head-navbar .nav-link {
   padding: 20px;
+  height: 100%;
   text-align: center;
+  border-bottom: 5px solid lightgrey;
+}
+#head-navbar .selected {
+  border-bottom: 5px solid black;
 }
 
 .material-symbols-outlined {
@@ -25,12 +35,16 @@
 .card {
   margin: 10px;
   width: 20rem;
-  height: 20rem;
+}
+.card .card-text {
+  margin-bottom: 80px;
 }
 .card .card-date {
   color: grey;
 }
 .card .card-rating {
+  position: absolute;
+  bottom: 50px;
   color: grey;
   margin: 0;
   padding: 0;
@@ -39,9 +53,13 @@
   color: orange;
 }
 .card .card-buttons {
+  position: absolute;
+  width: 100%;
   display: grid;
+  left: 0;
   grid-template-columns: 1fr 1fr;
   margin-top: 20px;
+  bottom: 0;
 }
 .card .card-buttons > .btn {
   border-radius: 0;
