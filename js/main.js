@@ -3,11 +3,6 @@ import { Collection } from './Collection.js';
 import { Game } from './Game.js';
 import { Movie } from './Movie.js';
 
-document.addEventListener('DOMContentLoaded', function () {
-    let type = document.getElementById('myChoice');
-    console.log(type.value);
-});
-
 function displayCollection(collection) {
     let html = '';
     let ratinghtml = '';
@@ -147,6 +142,8 @@ let type = document.getElementById('myChoice');
     document.getElementById('general').innerHTML = generalForm;
     document.getElementById('specific').innerHTML = specificForm;
     });
+
+
 
 let myCollection = new Collection();
 
