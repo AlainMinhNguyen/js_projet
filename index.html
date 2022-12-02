@@ -60,14 +60,61 @@
       <div class="modal-body">
         <form>
           <div class="mb-3">
-            <label for="type" class="col-form-label">Type</label>
-            <select class="form-select" name="typeChoice" id="type">
+            <label for="choixType" class="col-form-label">Type</label>
+            <select class="form-select" name="typeChoice" id="choixType">
+              <option disabled value="default" selected>-- Please select a category --</option>
               <option value="album">Album</option>
               <option value="game">Game</option>
               <option value="movie">Movie</option>
           </select>
           </div>
+          <div class="border-top my-3"></div>
+          <h3 class="text-center">GENERAL</h3>
+          <div class="border-top my-3"></div>
+          <div class="mb-3">
+            <label for="titre" class="col-form-label">Title</label>
+            <input type="text" class="form-control" id="titre">
+            <label for="ReleaseDate" class="col-form-label">Release date</label>
+            <input type="date" class="form-control" id="ReleaseDate">
+            <label for="rating" class="col-form-label">Rating</label>
+            <div class="rating">
+              <input type="radio" name="rating" value="5" id="5">
+              <label for="5">☆</label>
+              <input type="radio" name="rating" value="4" id="4">
+              <label for="4">☆</label>
+              <input type="radio" name="rating" value="3" id="3">
+              <label for="3">☆</label>
+              <input type="radio" name="rating" value="2" id="2">
+              <label for="2">☆</label>
+              <input type="radio" name="rating" value="1" id="1">
+              <label for="1">☆</label>
+          </div>
+
+            <label for="basic-url">Image</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">http://</span>
+              </div>
+              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="mysite.com">
+            </div>
+            <div class="border-top my-3"></div>
+              <h3 class="text-center">SPECIFIC</h3>
+            <div class="border-top my-3"></div>
+            <div class="mb-3">
+              <label for="studio" class="col-form-label">Studio</label>
+              <input type="text" class="form-control" id="studio">
+              <label for="nbOfPlayer" class="col-form-label">Number of player</label>
+              <input type="number" class="form-control" id="nbOfPlayer">
+              <label for="plot" class="col-form-label">Plot</label>
+              <textarea class="form-control" id="plot" rows="2"></textarea>
+            </div>
+
+          </div>
+
         </form>
+      </div>
+      <div id="form">
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button>

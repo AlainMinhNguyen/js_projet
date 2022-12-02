@@ -3,6 +3,11 @@ import { Collection } from './Collection.js';
 import { Game } from './Game.js';
 import { Movie } from './Movie.js';
 
+document.addEventListener('DOMContentLoaded', function () {
+    let type = document.getElementById('choixType');
+    console.log(type.value);
+});
+
 function displayCollection(collection) {
     let html = '';
     let ratinghtml = '';
@@ -67,8 +72,35 @@ function displayCollection(collection) {
     </div>
         `;
     });
+
+
     document.getElementById('media-container').innerHTML += html;
 }
+
+let type = document.getElementById('choixType');
+    type.addEventListener('change', function () {
+
+    let categoryChoice = type.options[type.selectedIndex].text;
+    console.log(categoryChoice);
+
+    let contentType = '';
+    switch (categoryChoice) {
+        case "Album":
+            contentType = "<div class='form-group'><label for='artist'>Artist</label><input type='text' class='form-control' id='artist' placeholder='Artist'></div>";
+            break;
+        case "Game":
+            contentType = "<div class='form-group'><label for='platform'>Platform</label><input type='text' class='form-control' id='platform' placeholder='Platform'></div>";
+            break;
+        case "Movie":
+            contentType = "<div class='form-group'><label for='director'>Director</label><input type='text' class='form-control' id='director' placeholder='Director'></div>";
+            break;
+        default:
+            contentType = "";
+            break;
+    }
+
+    document.getElementById('form').innerHTML = contentType;
+    });
 
 let myCollection = new Collection();
 
