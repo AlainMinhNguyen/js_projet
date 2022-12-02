@@ -68,8 +68,11 @@ function displayCollection(collection) {
     </div>
         `;
     });
+
+
     document.getElementById('media-container').innerHTML += html;
 }
+
 
 //à utiliser quand on add un item
 function addInLocalStorage(item) {
@@ -146,7 +149,81 @@ document.getElementById('navMovies').addEventListener('click', function () {
 });
 //------------------MAIN------------------
 
+let type = document.getElementById('myChoice');
+    type.addEventListener('change', function () {
+
+    let categoryChoice = type.options[type.selectedIndex].text;
+    console.log(categoryChoice);
+
+    let generalForm = '<div class="border-top my-3"></div> \
+    <p class="text-center">GENERAL</p> \
+    <div class="border-top my-3"></div> \
+    <div class="mb-3"> \
+      <label for="titre" class="col-form-label">Title</label> \
+      <input type="text" class="form-control" id="titre"> \
+      <label for="ReleaseDate" class="col-form-label">Release date</label> \
+      <input type="date" class="form-control" id="ReleaseDate"> \
+      <label for="rating" class="col-form-label">Rating</label> \
+      <div class="rating"> \
+        <input type="radio" name="rating" value="5" id="5"> \
+        <label for="5">☆</label>  \
+        <input type="radio" name="rating" value="4" id="4"> \
+        <label for="4">☆</label> \
+        <input type="radio" name="rating" value="3" id="3"> \
+        <label for="3">☆</label> \
+        <input type="radio" name="rating" value="2" id="2"> \
+        <label for="2">☆</label> \
+        <input type="radio" name="rating" value="1" id="1"> \
+        <label for="1">☆</label> \
+    </div>  \
+      <label for="basic-url">Image</label> \
+      <div class="input-group mb-3"> \
+        <div class="input-group-prepend"> \
+          <span class="input-group-text" id="basic-addon3">http://</span> \
+        </div>  \
+        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="mysite.com"> \
+      </div>'; 
+
+      let specificForm = '<div class="border-top my-3"></div><p class="text-center">SPECIFIC</p><div class="border-top my-3"></div>';
+
+    switch (categoryChoice) {
+        case "Album":
+            specificForm += '<label for="artists" class="col-form-label">Artists</label> \
+            <input type="text" class="form-control" id="artists"> \
+            <label for="nbTracks" class="col-form-label">Number of tracks</label> \
+            <input type="number" class="form-control" id="nbTracks"></input>';
+            break;
+        case "Game":
+            specificForm += '<div class="mb-3"> \
+            <label for="studio" class="col-form-label">Studio</label> \
+            <input type="text" class="form-control" id="studio"> \
+            <label for="nbPlayers" class="col-form-label">Number of players</label> \
+            <input type="number" class="form-control" id="nbPlayers"> \
+            <label for="plot" class="col-form-label">Plot</label> \
+            <textarea class="form-control" id="plot" rows="2"></textarea></div>';
+            break;
+        case "Movie":
+            specificForm += '<label for="director" class="col-form-label">Director</label> \
+            <input type="text" class="form-control" id="director"> \
+            <label for="actors" class="col-form-label">Actors</label> \
+            <input type="text" class="form-control" id="actors"> \
+            <label for="duration" class="col-form-label">Duration</label> \
+            <input type="plott" class="form-control" id="plot"> \
+            <label for="plot" class="col-form-label">Plot</label> \
+            <textarea class="form-control" id="plot" rows="2"></textarea>';
+            break;
+        default:
+            specificForm += "<p>Choisir une catégorie</p>";
+            break;
+    }
+    document.getElementById('general').innerHTML = generalForm;
+    document.getElementById('specific').innerHTML = specificForm;
+    });
+
+
+
 //------------------Creation d'objets exemple------------------
+
 let myCollection = new Collection();
 
 let myAlbum1image = 'https://lh3.googleusercontent.com/tLUmjnIvbPMklG1KkKE5QDuZ3DlEmhZLMGDsz5cliFgu61rYKZ93MZ_yoxEAqHTUP1DW-ICZZ2IVAac7=w544-h544-l90-rj'
