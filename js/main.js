@@ -2,6 +2,7 @@ import { Album } from './Album.js';
 import { Collection } from './Collection.js';
 import { Game } from './Game.js';
 import { Movie } from './Movie.js';
+import { Media } from './Media.js';
 
 function displayCollection(collection) {
     let html = '';
@@ -22,9 +23,9 @@ function displayCollection(collection) {
             ratinghtml += '<span class="fa fa-star"></span>';
         }
 
-        day = ("0" + element.date.getDate()).slice(-2);
-        month = ("0" + parseInt(parseInt(element.date.getMonth()) + 1)).slice(-2)
-        year = ("0" + element.date.getFullYear()).slice(-4);
+        // day = ("0" + element.date.getDate()).slice(-2);
+        // month = ("0" + parseInt(parseInt(element.date.getMonth()) + 1)).slice(-2)
+        // year = ("0" + element.date.getFullYear()).slice(-4);
 
         switch (element.getType()) {
             case "album":
@@ -88,7 +89,8 @@ function localStorageToCollection(collection, localStorage) {
     localStorage.forEach(element => {
         switch (element.type) {
             case "album":
-                collection.add(new Album(element.image, element.title, new Date(element.date), element.description, element.rating));
+                test = collection.add(new Album(element.title, new Date(element.releaseDate), element.rating, element.img, element.artists, element.nbTracks));
+                console.log(test);
                 break;
             case "game":
                 collection.add(new Game(element.image, element.title, new Date(element.date), element.description, element.rating));
@@ -221,18 +223,31 @@ let type = document.getElementById('myChoice');
     });
 
 
+    document.getElementById('addBtn').addEventListener('click', function () {
+        let type = document.getElementById('myChoice');
+        let categoryChoice = type.options[type.selectedIndex].text;
+        let title = document.getElementById('titre').value;
+        let releaseDate = document.getElementById('ReleaseDate').value;
+        let rating = document.querySelector('input[name="rating"]:checked').value;
+        let image = document.getElementById('basic-url').value;
+        console.log(categoryChoice, title, releaseDate, rating, image);
+    });
+
+
+
 
 //------------------Creation d'objets exemple------------------
 
 let myCollection = new Collection();
 
-let myAlbum1image = 'https://lh3.googleusercontent.com/tLUmjnIvbPMklG1KkKE5QDuZ3DlEmhZLMGDsz5cliFgu61rYKZ93MZ_yoxEAqHTUP1DW-ICZZ2IVAac7=w544-h544-l90-rj'
-let myAlbum1title = '86 EIGHTY-SIX original soundtrack'
+let myAlbum1image = 'https://lh3.googleusercontent.com/tLUmjnIvbPMklG1KkKE5QDuZ3DlEmhZLMGDsz5cliFgu61rYKZ93MZ_yoxEAqHTUP1DW-ICZZ2IVAac7=w544-h544-l90-rj';
+let myAlbum1title = '86 EIGHTY-SIX original soundtrack';
 let myAlbum1date = new Date('2021-03-10');
-let myAlbum1description = 'Album • Hiroyuki Sawano et KOHTA YAMAMOTO • 2021 \n 42 titres • 2 heures et 33 minutes'
-let myAlbum1rating = 5
+let myAlbum1artist = 'Album • Hiroyuki Sawano et KOHTA YAMAMOTO';
+let myAlbum1tracks = 42;
+let myAlbum1rating = 5;
 
-let myAlbum1 = new Album(myAlbum1image, myAlbum1title, myAlbum1date, myAlbum1description, myAlbum1rating);
+let myAlbum1 = new Album(myAlbum1title, myAlbum1date, myAlbum1rating, myAlbum1image, myAlbum1artist, myAlbum1tracks);
 
 let myAlbum2image = 'https://i.ytimg.com/vi/72PhV7wQr5Y/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBiZF0kxjQPLqLYBnG-DzsdK3_Y5g'
 let myAlbum2title = 'OST | 原神/Genshin Impact/げんしん/원신'
