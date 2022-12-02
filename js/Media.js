@@ -6,4 +6,8 @@ export class Media {
         this.description = description;
         this.rating = rating;
     }
+
+    getType() {
+        return this.type;
+    }
 }

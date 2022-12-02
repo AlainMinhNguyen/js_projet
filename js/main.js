@@ -21,6 +21,7 @@ function displayCollection(collection) {
         for (i; i < 5; i++) {
             ratinghtml += '<span class="fa fa-star"></span>';
         }
+
         day = ("0" + element.date.getDate()).slice(-2);
         month = ("0" + parseInt(parseInt(element.date.getMonth()) + 1)).slice(-2)
         year = ("0" + element.date.getFullYear()).slice(-4);
@@ -71,6 +72,82 @@ function displayCollection(collection) {
 
     document.getElementById('media-container').innerHTML += html;
 }
+
+
+//à utiliser quand on add un item
+function addInLocalStorage(item) {
+    let collection = JSON.parse(localStorage.getItem('collection'));
+    if (collection == null) {
+        collection = [];
+    }
+    collection.push(item);
+    localStorage.setItem('collection', JSON.stringify(collection));
+}
+
+function localStorageToCollection(collection, localStorage) {
+    localStorage.forEach(element => {
+        switch (element.type) {
+            case "album":
+                collection.add(new Album(element.image, element.title, new Date(element.date), element.description, element.rating));
+                break;
+            case "game":
+                collection.add(new Game(element.image, element.title, new Date(element.date), element.description, element.rating));
+                break;
+            case "movie":
+                collection.add(new Movie(element.image, element.title, new Date(element.date), element.description, element.rating));
+                break;
+            default:
+                break;
+        }
+    });
+    return collection;
+}
+
+//------------------Evenements------------------
+document.getElementById('navAll').addEventListener('click', function () {
+    console.log('All');
+    document.getElementById('navAlbums').classList.remove('selected');
+    document.getElementById('navGames').classList.remove('selected');
+    document.getElementById('navMovies').classList.remove('selected');
+    document.getElementById('navAll').classList.add('selected');
+    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'block');
+    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'block');
+    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'block');
+});
+
+document.getElementById('navAlbums').addEventListener('click', function () {
+    console.log('Albums');
+    document.getElementById('navAll').classList.remove('selected');
+    document.getElementById('navGames').classList.remove('selected');
+    document.getElementById('navMovies').classList.remove('selected');
+    document.getElementById('navAlbums').classList.add('selected');
+    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'block');
+    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'none');
+    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'none');
+});
+
+document.getElementById('navGames').addEventListener('click', function () {
+    console.log('Games');
+    document.getElementById('navAll').classList.remove('selected');
+    document.getElementById('navAlbums').classList.remove('selected');
+    document.getElementById('navMovies').classList.remove('selected');
+    document.getElementById('navGames').classList.add('selected');
+    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'none');
+    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'block');
+    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'none');
+});
+
+document.getElementById('navMovies').addEventListener('click', function () {
+    console.log('Movies');
+    document.getElementById('navAll').classList.remove('selected');
+    document.getElementById('navAlbums').classList.remove('selected');
+    document.getElementById('navGames').classList.remove('selected');
+    document.getElementById('navMovies').classList.add('selected');
+    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'none');
+    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'none');
+    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'block');
+});
+//------------------MAIN------------------
 
 let type = document.getElementById('myChoice');
     type.addEventListener('change', function () {
@@ -145,6 +222,8 @@ let type = document.getElementById('myChoice');
 
 
 
+//------------------Creation d'objets exemple------------------
+
 let myCollection = new Collection();
 
 let myAlbum1image = 'https://lh3.googleusercontent.com/tLUmjnIvbPMklG1KkKE5QDuZ3DlEmhZLMGDsz5cliFgu61rYKZ93MZ_yoxEAqHTUP1DW-ICZZ2IVAac7=w544-h544-l90-rj'
@@ -174,7 +253,7 @@ let myGame1 = new Game(myGame1image, myGame1title, myGame1date, myGame1descripti
 let myGame2image = 'https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_GenshinImpact_miHoYoLimited_S2_1200x1600-c12cdcc2cac330df2185aa58c508e820'
 let myGame2title = 'Genshin Impact'
 let myGame2date = new Date('2021-03-10');
-let myGame2description = 'Black Desert Online is a sandbox-oriented fantasy massively multiplayer online role-playing game developed by Korean video game developer Pearl Abyss and originally published for Microsoft Windows in 2015.'
+let myGame2description = 'Genshin Impact is an action role-playing game developed and published by miHoYo. It was released for Microsoft Windows, PlayStation 4, iOS, and Android in 2020, on PlayStation 5 in 2021, and is set for release on Nintendo Switch.'
 let myGame2rating = 4
 
 let myGame2 = new Game(myGame2image, myGame2title, myGame2date, myGame2description, myGame2rating);
@@ -182,7 +261,7 @@ let myGame2 = new Game(myGame2image, myGame2title, myGame2date, myGame2descripti
 let myMovie1image = 'https://www.nautiljon.com/images/anime/00/20/mini/fate_stay_night_heaven_s_feel_i_presage_flower_4702.jpg?11528565156'
 let myMovie1title = 'Fate/stay night: Heaven\'s Feel I. presage flower'
 let myMovie1date = new Date('2021-03-10');
-let myMovie1description = 'Genshin Impact is an action role-playing game developed and published by miHoYo. It was released for Microsoft Windows, PlayStation 4, iOS, and Android in 2020, on PlayStation 5 in 2021, and is set for release on Nintendo Switch.'
+let myMovie1description = 'High school student Shirou finds himself at the centre of an ancient war between wizards to claim a magical artefact.'
 let myMovie1rating = 4
 
 let myMovie1 = new Movie(myMovie1image, myMovie1title, myMovie1date, myMovie1description, myMovie1rating);
@@ -195,59 +274,21 @@ let myMovie2rating = 3
 
 let myMovie2 = new Movie(myMovie2image, myMovie2title, myMovie2date, myMovie2description, myMovie2rating);
 
+//------------------Ajout dand la collection exemples------------------
 myCollection.add(myAlbum1);
 myCollection.add(myGame1);
 myCollection.add(myMovie1);
 myCollection.add(myAlbum2);
 myCollection.add(myMovie2);
-myCollection.add(myGame2);
+//localStorage.clear(); //vider le local storage
+addInLocalStorage(myGame2);
 
-myCollection.items.forEach(element => {
-    console.log(element);
-});
-
+//------------------Ajout des données en localStorage dans la collection------------------
+//localStorage.clear(); //vider le local storage
+if (localStorage.getItem('collection') != null) {
+    let localStorageCollection = JSON.parse(localStorage.getItem('collection'));
+    myCollection = localStorageToCollection(myCollection, localStorageCollection);
+}
+//------------------Affichage------------------
 displayCollection(myCollection);
 
-document.getElementById('navAll').addEventListener('click', function () {
-    console.log('All');
-    document.getElementById('navAlbums').classList.remove('selected');
-    document.getElementById('navGames').classList.remove('selected');
-    document.getElementById('navMovies').classList.remove('selected');
-    document.getElementById('navAll').classList.add('selected');
-    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'block');
-    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'block');
-    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'block');
-});
-
-document.getElementById('navAlbums').addEventListener('click', function () {
-    console.log('Albums');
-    document.getElementById('navAll').classList.remove('selected');
-    document.getElementById('navGames').classList.remove('selected');
-    document.getElementById('navMovies').classList.remove('selected');
-    document.getElementById('navAlbums').classList.add('selected');
-    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'block');
-    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'none');
-    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'none');
-});
-
-document.getElementById('navGames').addEventListener('click', function () {
-    console.log('Games');
-    document.getElementById('navAll').classList.remove('selected');
-    document.getElementById('navAlbums').classList.remove('selected');
-    document.getElementById('navMovies').classList.remove('selected');
-    document.getElementById('navGames').classList.add('selected');
-    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'none');
-    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'block');
-    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'none');
-});
-
-document.getElementById('navMovies').addEventListener('click', function () {
-    console.log('Movies');
-    document.getElementById('navAll').classList.remove('selected');
-    document.getElementById('navAlbums').classList.remove('selected');
-    document.getElementById('navGames').classList.remove('selected');
-    document.getElementById('navMovies').classList.add('selected');
-    Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'none');
-    Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'none');
-    Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'block');
-});
