@@ -247,6 +247,8 @@ type.addEventListener('change', function () {
                         let plotToAPI = movie.Plot;
                         console.log(titleToAPI, dateToAPI, ratingToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
                         document.getElementById('titleAPI').value = titleToAPI;
+                        let newMovieWithAPI = new Movie(titleToAPI, dateToAPI, ratingToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
+                        console.log(newMovieWithAPI);
 
                     })
                     .catch(error => console.log(error));
