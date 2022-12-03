@@ -152,7 +152,7 @@ document.getElementById('navMovies').addEventListener('click', function () {
 //------------------MAIN------------------
 
 let type = document.getElementById('myChoice');
-    type.addEventListener('change', function () {
+type.addEventListener('change', function () {
 
     let categoryChoice = type.options[type.selectedIndex].text;
     console.log(categoryChoice);
@@ -184,18 +184,22 @@ let type = document.getElementById('myChoice');
           <span class="input-group-text" id="basic-addon3">http://</span> \
         </div>  \
         <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="mysite.com"> \
-      </div>'; 
+      </div>';
 
-      let specificForm = '<div class="border-top my-3"></div><p class="text-center">SPECIFIC</p><div class="border-top my-3"></div>';
+    let specificForm = '<div class="border-top my-3"></div><p class="text-center">SPECIFIC</p><div class="border-top my-3"></div>';
 
     switch (categoryChoice) {
         case "Album":
+            document.getElementById('general').innerHTML = generalForm;
             specificForm += '<label for="artists" class="col-form-label">Artists</label> \
             <input type="text" class="form-control" id="artists"> \
             <label for="nbTracks" class="col-form-label">Number of tracks</label> \
             <input type="number" class="form-control" id="nbTracks"></input>';
+            document.getElementById('general').innerHTML = generalForm;
+            document.getElementById('specific').innerHTML = specificForm;
             break;
         case "Game":
+            document.getElementById('general').innerHTML = generalForm;
             specificForm += '<div class="mb-3"> \
             <label for="studio" class="col-form-label">Studio</label> \
             <input type="text" class="form-control" id="studio"> \
@@ -203,35 +207,95 @@ let type = document.getElementById('myChoice');
             <input type="number" class="form-control" id="nbPlayers"> \
             <label for="plot" class="col-form-label">Plot</label> \
             <textarea class="form-control" id="plot" rows="2"></textarea></div>';
+            document.getElementById('specific').innerHTML = specificForm;
             break;
         case "Movie":
+            document.getElementById('general').innerHTML = '<button type="button" class="btn btn-primary" id="importAPI">Or Import with OMDbapi</button> ';
+            document.getElementById('general').innerHTML += generalForm;
             specificForm += '<label for="director" class="col-form-label">Director</label> \
             <input type="text" class="form-control" id="director"> \
             <label for="actors" class="col-form-label">Actors</label> \
             <input type="text" class="form-control" id="actors"> \
             <label for="duration" class="col-form-label">Duration</label> \
-            <input type="plott" class="form-control" id="plot"> \
+            <input type="number" class="form-control" id="duration"> \
             <label for="plot" class="col-form-label">Plot</label> \
             <textarea class="form-control" id="plot" rows="2"></textarea>';
+            document.getElementById('specific').innerHTML = specificForm;
+            document.getElementById('importAPI').addEventListener('click', function () {
+                document.getElementById('general').innerHTML = '<h3 class="text-center">Import a movie with OMDbapi</h3>';
+                document.getElementById('specific').innerHTML = '    <div class="input-group mb-3" id="movieResult"> \
+                <input type="text" class="form-control" id="titleAPI" placeholder="Title of movie" aria-label="Title of movie"> \
+                <div class="input-group-append"> \
+                <button type="button" class="btn btn-primary" id="addMovie">Add movie with API</button> \
+              </div>';
+              document.getElementById('addMovie').addEventListener('click', function () {
+                let apikey = '9c30d4cc';
+                let movieTitle = document.getElementById('titleAPI').value;
+                let url = 'http://www.omdbapi.com/?apikey=' + apikey + '&t=' + movieTitle + '&plot=short&r=json';
+                console.log(url);
+                fetch(url)
+                    .then(response => response.json())
+                    .then(movie => {
+                        console.log(movie);
+                        let titleToAPI = movie.Title;
+                        let dateToAPI = movie.Released;
+                        let ratingToAPI = movie.imdbRating;
+                        let imageToAPI = movie.Poster;
+                        let directorToAPI = movie.Director;
+                        let actorsToAPI = movie.Actors;
+                        let durationToAPI = movie.Runtime;
+                        let plotToAPI = movie.Plot;
+                        console.log(titleToAPI, dateToAPI, ratingToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
+                        document.getElementById('titleAPI').value = titleToAPI;
+
+                    })
+                    .catch(error => console.log(error));
+            });
+            });
+                
+            // import movie with OMDbapi
+             
             break;
         default:
             specificForm += "<p>Choisir une catégorie</p>";
+            document.getElementById('specific').innerHTML = specificForm;
             break;
     }
-    document.getElementById('general').innerHTML = generalForm;
-    document.getElementById('specific').innerHTML = specificForm;
-    });
 
 
-    document.getElementById('addBtn').addEventListener('click', function () {
-        let type = document.getElementById('myChoice');
-        let categoryChoice = type.options[type.selectedIndex].text;
-        let title = document.getElementById('titre').value;
-        let releaseDate = document.getElementById('ReleaseDate').value;
-        let rating = document.querySelector('input[name="rating"]:checked').value;
-        let image = document.getElementById('basic-url').value;
-        console.log(categoryChoice, title, releaseDate, rating, image);
-    });
+});
+
+
+
+document.getElementById('addBtn').addEventListener('click', function () {
+    let type = document.getElementById('myChoice');
+    let categoryChoice = type.options[type.selectedIndex].text;
+    let title = document.getElementById('titre').value;
+    let releaseDate = document.getElementById('ReleaseDate').value;
+    let rating = document.querySelector('input[name="rating"]:checked').value;
+    let image = document.getElementById('basic-url').value;
+    if (categoryChoice == "Album") {
+        let artists = document.getElementById('artists').value;
+        let nbTracks = document.getElementById('nbTracks').value;
+        let newAlbum = new Album(title, releaseDate, rating, image, artists, nbTracks);
+        console.log(newAlbum);
+    } else if (categoryChoice == "Game") {
+        let studio = document.getElementById('studio').value;
+        let nbPlayers = document.getElementById('nbPlayers').value;
+        let plot = document.getElementById('plot').value;
+        let newGame = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
+        console.log(newGame);
+    } else if (categoryChoice == "Movie") {
+        let director = document.getElementById('director').value;
+        let actors = document.getElementById('actors').value;
+        let duration = document.getElementById('duration').value;
+        let plot = document.getElementById('plot').value;
+        let newMovie = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
+        console.log(newMovie);
+    }
+
+});
+
 
 
 
