@@ -1,8 +1,11 @@
 import { Media } from "./Media.js";
 
 export class Game extends Media {
-    constructor(image, title, date, description, rating) {
-        super(image, title, date, description, rating);
+    constructor(title, releaseDate, rating, img, studio, nbPlayers, plot) {
+        super(title, releaseDate, rating, img);
+        this.studio = studio;
+        this.nbPlayers = nbPlayers;
+        this.plot = plot;
         this.type = 'game';
     }
 }
