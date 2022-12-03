@@ -17,7 +17,7 @@ function displayCollection(collection) {
         i = 0;
         ratinghtml = '';
         for (i; i < element.rating; i++) {
-           ratinghtml += '<span class="fa fa-star checked"></span>';
+            ratinghtml += '<span class="fa fa-star checked"></span>';
         }
         for (i; i < 5; i++) {
             ratinghtml += '<span class="fa fa-star"></span>';
@@ -54,25 +54,25 @@ function displayCollection(collection) {
         <div class="card-body">
 
             <h5 class="card-title"><span class="material-symbols-outlined">`+ icon + `</span> ` + element.title + `</h5>
-            <span class="card-date">Released the `+ month + `/` + day + `/` + year + `</span>
+            <span class="card-date">Released the `+ month + `-` + day + `-` + year +`</span>
         `
         if (element.getType() == "album") {
-            html += `<br><span class="grey-info">Number of track : ` + element.nbTracks + `</span><p class="card-text">`+ element.artists +
-            `<br></p>`
+            html += `<br><span class="grey-info">Number of track : ` + element.nbTracks + `</span><p class="card-text">` + element.artists +
+                `<br></p>`
         }
         if (element.getType() == "game") {
-            html += `<p class="card-text">`+ element.plot +
-            `<br><br><span class="grey-info">Number of players : ` + element.nbPlayers + `</span><br>
+            html += `<p class="card-text">` + element.plot +
+                `<br><br><span class="grey-info">Number of players : ` + element.nbPlayers + `</span><br>
             <span class="grey-info">Studio : ` + element.studio + `</span><br>
             
             </p>`
         }
         if (element.getType() == "movie") {
-            html += `<p class="card-text">`+ element.plot +
-            `<br><br>
+            html += `<p class="card-text">` + element.plot +
+                `<br><br>
             <span class="grey-info">Director : ` + element.director + `</span><br>
             <span class="grey-info">Actors : ` + element.actors + `</span><br>
-            <span class="grey-info">Duration : ` + element.duration + `</span>
+            <span class="grey-info">Duration : ` + element.duration + ` min ` + `</span>
             </p>`
         }
         html += `
@@ -92,9 +92,8 @@ function displayCollection(collection) {
     </div>
         `;
     });
-    console.log(html);
 
-    document.getElementById('media-container').innerHTML += html;
+    document.getElementById('media-container').innerHTML = html;
 }
 
 
@@ -112,8 +111,8 @@ function localStorageToCollection(collection, localStorage) {
     localStorage.forEach(element => {
         switch (element.type) {
             case "album":
-                test = collection.add(new Album(element.title, new Date(element.releaseDate), element.rating, element.img, element.artists, element.nbTracks));
-                console.log(test);
+                let test = collection.add(new Album(element.title, new Date(element.releaseDate), element.rating, element.img, element.artists, element.nbTracks));
+                console.log('test : ', test);
                 break;
             case "game":
                 collection.add(new Game(element.title, new Date(element.releaseDate), element.rating, element.img, element.studio, element.nbPlayers, element.plot));
@@ -275,40 +274,40 @@ type.addEventListener('change', function () {
             document.getElementById('general').innerHTML = generalForm;
             document.getElementById('specific').innerHTML = specificForm;
 
-                document.getElementById('addMovie').addEventListener('click', function () {
-                    let apikey = '9c30d4cc';
-                    let movieTitle = document.getElementById('titre').value;
-                    let url = 'http://www.omdbapi.com/?apikey=' + apikey + '&t=' + movieTitle + '&plot=short&r=json';
-                    console.log(url);
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(movie => {
-                            console.log(movie);
-                            let titleToAPI = movie.Title;
-                            let dateString = movie.Released;
-                            let dateToAPI = new Date(dateString).toISOString().slice(0, 10);
-                            let imageToAPI = movie.Poster;
-                            let directorToAPI = movie.Director;
-                            let actorsToAPI = movie.Actors;
-                            let durationString = movie.Runtime;
-                            let durationToAPI = durationString.replace(' min', '');
-                            let plotToAPI = movie.Plot;
+            document.getElementById('addMovie').addEventListener('click', function () {
+                let apikey = '9c30d4cc';
+                let movieTitle = document.getElementById('titre').value;
+                let url = 'http://www.omdbapi.com/?apikey=' + apikey + '&t=' + movieTitle + '&plot=short&r=json';
+                console.log(url);
+                fetch(url)
+                    .then(response => response.json())
+                    .then(movie => {
+                        console.log(movie);
+                        let titleToAPI = movie.Title;
+                        let dateString = movie.Released;
+                        let dateToAPI = new Date(dateString).toISOString().slice(0, 10);
+                        let imageToAPI = movie.Poster;
+                        let directorToAPI = movie.Director;
+                        let actorsToAPI = movie.Actors;
+                        let durationString = movie.Runtime;
+                        let durationToAPI = durationString.replace(' min', '');
+                        let plotToAPI = movie.Plot;
 
-                            document.getElementById('titre').value = titleToAPI;
-                            document.getElementById('ReleaseDate').value = dateToAPI;
-                            document.getElementById('basic-url').value = imageToAPI;
-                            document.getElementById('director').value = directorToAPI;
-                            document.getElementById('actors').value = actorsToAPI;
-                            document.getElementById('duration').value = durationToAPI
-                            document.getElementById('plot').value = plotToAPI;
-                            console.log(titleToAPI, dateToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
-                            
-                            // let newMovieWithAPI = new Movie(titleToAPI, dateToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
-                           // console.log(newMovieWithAPI);
+                        document.getElementById('titre').value = titleToAPI;
+                        document.getElementById('ReleaseDate').value = dateToAPI;
+                        document.getElementById('basic-url').value = imageToAPI;
+                        document.getElementById('director').value = directorToAPI;
+                        document.getElementById('actors').value = actorsToAPI;
+                        document.getElementById('duration').value = durationToAPI
+                        document.getElementById('plot').value = plotToAPI;
+                        console.log(titleToAPI, dateToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
 
-                        })
-                        .catch(error => console.log(error));
-                });
+                        // let newMovieWithAPI = new Movie(titleToAPI, dateToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
+                        // console.log(newMovieWithAPI);
+
+                    })
+                    .catch(error => console.log(error));
+            });
 
             break;
         default:
@@ -323,10 +322,11 @@ type.addEventListener('change', function () {
 
 
 document.getElementById('addBtn').addEventListener('click', function () {
+    //let myCollection = new Collection();
     let type = document.getElementById('myChoice');
     let categoryChoice = type.options[type.selectedIndex].text;
     let title = document.getElementById('titre').value;
-    let releaseDate = document.getElementById('ReleaseDate').value;
+    let releaseDate = new Date(document.getElementById('ReleaseDate').value);
     let rating = document.querySelector('input[name="rating"]:checked').value;
     let image = document.getElementById('basic-url').value;
     if (categoryChoice == "Album") {
@@ -334,12 +334,24 @@ document.getElementById('addBtn').addEventListener('click', function () {
         let nbTracks = document.getElementById('nbTracks').value;
         let newAlbum = new Album(title, releaseDate, rating, image, artists, nbTracks);
         console.log(newAlbum);
+        myCollection.add(newAlbum);
+        addInLocalStorage(newAlbum);
+        //  let localStorageCollection = JSON.parse(localStorage.getItem('collection'));
+        //myCollection = localStorageToCollection(myCollection, localStorageCollection);
+        displayCollection(myCollection);
+
+        console.log(myCollection);
     } else if (categoryChoice == "Game") {
         let studio = document.getElementById('studio').value;
         let nbPlayers = document.getElementById('nbPlayers').value;
         let plot = document.getElementById('plot').value;
         let newGame = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
         console.log(newGame);
+        myCollection.add(newGame);
+        addInLocalStorage(newGame);
+        displayCollection(myCollection);
+
+        console.log(myCollection);
     } else if (categoryChoice == "Movie") {
         let director = document.getElementById('director').value;
         let actors = document.getElementById('actors').value;
@@ -347,12 +359,17 @@ document.getElementById('addBtn').addEventListener('click', function () {
         let plot = document.getElementById('plot').value;
         let newMovie = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
         console.log(newMovie);
+        myCollection.add(newMovie);
+        addInLocalStorage(newMovie);
+        displayCollection(myCollection);
+
+        console.log(myCollection);
     }
-    
+
 
 });
 
-    
+
 
 
 
@@ -409,7 +426,7 @@ let myMovie1rating = 4
 let myMovie1image = 'https://www.nautiljon.com/images/anime/00/20/mini/fate_stay_night_heaven_s_feel_i_presage_flower_4702.jpg?11528565156'
 let myMovie1director = 'Tomonori Sudou';
 let myMovie1actors = 'Person, Person, Person';
-let myMovie1duration = '2h 10min';
+let myMovie1duration = 120;
 let myMovie1plot = 'High school student Shirou finds himself at the centre of an ancient war between wizards to claim a magical artefact.'
 
 let myMovie1 = new Movie(myMovie1title, myMovie1date, myMovie1rating, myMovie1image, myMovie1director, myMovie1actors, myMovie1duration, myMovie1plot);
@@ -420,7 +437,7 @@ let myMovie2rating = 3
 let myMovie2image = 'https://www.nautiljon.com/images/anime/00/91/mini/fate_stay_night_heaven_s_feel_ii_lost_butterfly_5719.jpg?11567168184'
 let myMovie2director = 'Tomonori Sudou';
 let myMovie2actors = 'Person, Person, Person';
-let myMovie2duration = '2h 10min';
+let myMovie2duration = 160;
 let myMovie2plot = 'Fate/stay night: Heaven\'s Feel II. lost butterfly is a 2019 Japanese anime fantasy film produced by ufotable and directed by Tomonori Sudō. The second installment in the Fate/stay night: Heaven\'s Feel trilogy, it premiered in Japan on January 12, 2019 and in the United States on March 14, 2019.'
 
 let myMovie2 = new Movie(myMovie2title, myMovie2date, myMovie2rating, myMovie2image, myMovie2director, myMovie2actors, myMovie2duration, myMovie2plot);
@@ -431,8 +448,7 @@ myCollection.add(myGame1);
 myCollection.add(myMovie1);
 myCollection.add(myAlbum2);
 myCollection.add(myMovie2);
-localStorage.clear(); //vider le local storage
-addInLocalStorage(myGame2);
+myCollection.add(myGame2);
 
 //------------------Ajout des données en localStorage dans la collection------------------
 //localStorage.clear(); //vider le local storage
