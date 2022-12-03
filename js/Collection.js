@@ -7,7 +7,7 @@ export class Collection {
         this.items.push(item);
     }
 
-    addInLocalStorage(item) {
+    addMedia(item) {
         let collection = JSON.parse(localStorage.getItem('collection'));
         if (collection == null) {
             collection = [];
@@ -16,19 +16,21 @@ export class Collection {
         localStorage.setItem('collection', JSON.stringify(collection));
     }
 
-    removeMedia(item) {
-        let index = this.items.indexOf(item);
-        this.items.splice(index, 1);
 
-    }
-
-
-    deleteFromLocalStorage(item) {
+    removeMedia(title) {
         let collection = JSON.parse(localStorage.getItem('collection'));
-        let index = collection.indexOf(item);
-        collection.splice(index, 1);
+        if (collection == null) {
+            collection = [];
+        }
+        for (let i = 0; i < collection.length; i++) {
+            if (collection[i].title == title) {
+                collection.splice(i, 1);
+            }
+        }
         localStorage.setItem('collection', JSON.stringify(collection));
     }
+
+
 
     getItems() {
         return this.items;

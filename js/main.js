@@ -355,7 +355,7 @@ document.getElementById('addBtn').addEventListener('click', function () {
         let newAlbum = new Album(title, releaseDate, rating, image, artists, nbTracks);
         console.log(newAlbum);
         myCollection.add(newAlbum);
-        myCollection.addInLocalStorage(newAlbum);
+        myCollection.addMedia(newAlbum);
         displayCollection(myCollection);
 
         console.log(myCollection);
@@ -366,7 +366,7 @@ document.getElementById('addBtn').addEventListener('click', function () {
         let newGame = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
         console.log(newGame);
         myCollection.add(newGame);
-        myCollection.addInLocalStorage(newGame);
+        myCollection.addMedia(newGame);
         displayCollection(myCollection);
 
         console.log(myCollection);
@@ -378,7 +378,7 @@ document.getElementById('addBtn').addEventListener('click', function () {
         let newMovie = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
         console.log(newMovie);
         myCollection.add(newMovie);
-        myCollection.addInLocalStorage(newMovie);
+        myCollection.addMedia(newMovie);
         displayCollection(myCollection);
 
         console.log(myCollection);
@@ -387,18 +387,16 @@ document.getElementById('addBtn').addEventListener('click', function () {
 
 });
 
-function deleteFromTitle(title) {
-    console.log(title);
-    myCollection.delete(title);
-    myCollection.deleteFromLocalStorage(title);
-    displayCollection(myCollection);
-}
-
-    
 
 
-
-
+document.addEventListener('DOMContentLoaded', function () {
+    let removeBtn = document.getElementById('Rm-Avatar');
+    removeBtn.addEventListener('click', function () {
+        console.log('OK');
+        myCollection.removeMedia(title);
+        displayCollection(myCollection);
+    })
+});
 
 
 //------------------Creation d'objets exemple------------------
