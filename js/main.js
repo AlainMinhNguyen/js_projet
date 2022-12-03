@@ -216,7 +216,7 @@ type.addEventListener('change', function () {
                 <input type="text" class="form-control" id="titre"> \
                 <button type="button" class="btn btn-secondary" id="addMovie">Add movie with API (optional)</button><br/>\
                 <label for="ReleaseDate" class="col-form-label">Release date</label> \
-                <input type="text" class="form-control" id="ReleaseDate"> \
+                <input type="date" class="form-control" id="ReleaseDate"> \
                 <label for="rating" class="col-form-label">Rating</label> \
                 <div class="rating"> \
                     <input type="radio" name="rating" value="5" id="5"> \
@@ -243,7 +243,7 @@ type.addEventListener('change', function () {
                 <label for="actors" class="col-form-label">Actors</label> \
                 <input type="text" class="form-control" id="actors"> \
                 <label for="duration" class="col-form-label">Duration</label> \
-                <input type="text" class="form-control" id="duration"> \
+                <input type="number" class="form-control" id="duration"> \
                 <label for="plot" class="col-form-label">Plot</label> \
                 <textarea class="form-control" id="plot" rows="2"></textarea>';
 
@@ -260,12 +260,13 @@ type.addEventListener('change', function () {
                         .then(movie => {
                             console.log(movie);
                             let titleToAPI = movie.Title;
-                            let dateToAPI = movie.Released;
-                            let ratingToAPI = movie.imdbRating;
+                            let dateString = movie.Released;
+                            let dateToAPI = new Date(dateString).toISOString().slice(0, 10);
                             let imageToAPI = movie.Poster;
                             let directorToAPI = movie.Director;
                             let actorsToAPI = movie.Actors;
-                            let durationToAPI = movie.Runtime;
+                            let durationString = movie.Runtime;
+                            let durationToAPI = durationString.replace(' min', '');
                             let plotToAPI = movie.Plot;
 
                             document.getElementById('titre').value = titleToAPI;
@@ -273,11 +274,11 @@ type.addEventListener('change', function () {
                             document.getElementById('basic-url').value = imageToAPI;
                             document.getElementById('director').value = directorToAPI;
                             document.getElementById('actors').value = actorsToAPI;
-                            document.getElementById('duration').value = durationToAPI;
+                            document.getElementById('duration').value = durationToAPI
                             document.getElementById('plot').value = plotToAPI;
-                            console.log(titleToAPI, dateToAPI, ratingToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
+                            console.log(titleToAPI, dateToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
                             
-                            // let newMovieWithAPI = new Movie(titleToAPI, dateToAPI, ratingToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
+                            // let newMovieWithAPI = new Movie(titleToAPI, dateToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
                            // console.log(newMovieWithAPI);
 
                         })
