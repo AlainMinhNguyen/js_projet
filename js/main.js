@@ -50,7 +50,7 @@ function displayCollection(collection) {
 
             <h5 class="card-title"><span class="material-symbols-outlined">`+ icon + `</span> ` + element.title + `</h5>
             <span class="card-date">Released the `+ month + `-` + day + `-` + year +`</span>
-        `
+        `;
         if (element.getType() == "album") {
             html += `<br><span class="grey-info">Number of track : ` + element.nbTracks + `</span><p class="card-text">` + element.artists +
                 `<br></p>`
@@ -389,14 +389,14 @@ document.getElementById('addBtn').addEventListener('click', function () {
 
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    let removeBtn = document.getElementById('Rm-Avatar');
-    removeBtn.addEventListener('click', function () {
-        console.log('OK');
-        myCollection.removeMedia(title);
-        displayCollection(myCollection);
-    })
-});
+// document.addEventListener('DOMContentLoaded', function () {
+//     let removeBtn = document.getElementById('Rm-Avatar');
+//     removeBtn.addEventListener('click', function () {
+//         console.log('OK');
+//         myCollection.removeMedia(title);
+//         displayCollection(myCollection);
+//     });
+// });
 
 
 //------------------Creation d'objets exemple------------------
@@ -482,4 +482,3 @@ if (localStorage.getItem('collection') != null) {
 }
 //------------------Affichage------------------
 displayCollection(myCollection);
-
