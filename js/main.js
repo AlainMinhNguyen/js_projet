@@ -13,7 +13,6 @@ function displayCollection(collection) {
     let year;
     let icon;
     collection.items.forEach(element => {
-        console.log(element);
         i = 0;
         ratinghtml = '';
         for (i; i < element.rating; i++) {
@@ -26,9 +25,6 @@ function displayCollection(collection) {
         day = ("0" + element.releaseDate.getDate()).slice(-2);
         month = ("0" + parseInt(parseInt(element.releaseDate.getMonth()) + 1)).slice(-2)
         year = ("0" + element.releaseDate.getFullYear()).slice(-4);
-
-        console.log(day, month, year);
-
 
         switch (element.getType()) {
             case "album":
@@ -44,7 +40,6 @@ function displayCollection(collection) {
                 icon = "error";
                 break;
         }
-        console.log(icon);
 
         html += `
         <div class="card card-`+ element.getType() + `">
@@ -59,23 +54,31 @@ function displayCollection(collection) {
         if (element.getType() == "album") {
             html += `<br><span class="grey-info">Number of track : ` + element.nbTracks + `</span><p class="card-text">` + element.artists +
                 `<br></p>`
+                html += `
+                <p class="card-rating">
+                    Rating :
+                    `+ ratinghtml + `
+                </p>
+                <div class="card-buttons">
+                    <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
+                        edit_square
+                    </span> edit</a>
+                    <button type="button" id="`+ element.title.replace(/ /g, '') + `" onclick="deleteFromTitle(`+ element.title +`);" class="btn btn-primary"><span class="material-symbols-outlined">
+                            delete
+                        </span> remove</button>
+                </div>
+            </div>
+        </div>
+            `;
+
         }
         if (element.getType() == "game") {
             html += `<p class="card-text">` + element.plot +
                 `<br><br><span class="grey-info">Number of players : ` + element.nbPlayers + `</span><br>
-            <span class="grey-info">Studio : ` + element.studio + `</span><br>
+            <span class="grey-info">Studio : ` + "Rm-" + element.studio + `</span><br>
             
             </p>`
-        }
-        if (element.getType() == "movie") {
-            html += `<p class="card-text">` + element.plot +
-                `<br><br>
-            <span class="grey-info">Director : ` + element.director + `</span><br>
-            <span class="grey-info">Actors : ` + element.actors + `</span><br>
-            <span class="grey-info">Duration : ` + element.duration + ` min ` + `</span>
-            </p>`
-        }
-        html += `
+            html += `
             <p class="card-rating">
                 Rating :
                 `+ ratinghtml + `
@@ -84,35 +87,50 @@ function displayCollection(collection) {
                 <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
                     edit_square
                 </span> edit</a>
-                <a href="#" class="btn btn-primary"><span class="material-symbols-outlined">
+                <button type="button" id="` + "Rm-"+ element.title.replace(/ /g, '') + `"  class="btn btn-primary"><span class="material-symbols-outlined">
                         delete
-                    </span> remove</a>
+                    </span> remove</button>
             </div>
         </div>
     </div>
         `;
+        }
+        if (element.getType() == "movie") {
+            html += `<p class="card-text">` + element.plot +
+                `<br><br>
+            <span class="grey-info">Director : ` + element.director + `</span><br>
+            <span class="grey-info">Actors : ` + element.actors + `</span><br>
+            <span class="grey-info">Duration : ` + element.duration + ` min ` + `</span>
+            </p>`
+            html += `
+            <p class="card-rating">
+                Rating :
+                `+ ratinghtml + `
+            </p>
+            <div class="card-buttons">
+                <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
+                    edit_square
+                </span> edit</a>
+                <button type="button" id="` + "Rm-" + element.title.replace(/ /g, '') + `"  class="btn btn-primary"><span class="material-symbols-outlined">
+                        delete
+                    </span> remove</button>
+            </div>
+        </div>
+    </div>
+        `;
+        }
     });
 
     document.getElementById('media-container').innerHTML = html;
 }
 
 
-//à utiliser quand on add un item
-function addInLocalStorage(item) {
-    let collection = JSON.parse(localStorage.getItem('collection'));
-    if (collection == null) {
-        collection = [];
-    }
-    collection.push(item);
-    localStorage.setItem('collection', JSON.stringify(collection));
-}
 
 function localStorageToCollection(collection, localStorage) {
     localStorage.forEach(element => {
         switch (element.type) {
             case "album":
-                let test = collection.add(new Album(element.title, new Date(element.releaseDate), element.rating, element.img, element.artists, element.nbTracks));
-                console.log('test : ', test);
+                collection.add(new Album(element.title, new Date(element.releaseDate), element.rating, element.img, element.artists, element.nbTracks));
                 break;
             case "game":
                 collection.add(new Game(element.title, new Date(element.releaseDate), element.rating, element.img, element.studio, element.nbPlayers, element.plot));
@@ -306,7 +324,10 @@ type.addEventListener('change', function () {
                         // console.log(newMovieWithAPI);
 
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => {
+                        console.log('erreur ', error)
+                        document.getElementById('titre').value = 'Movie not found';
+                    });
             });
 
             break;
@@ -322,7 +343,6 @@ type.addEventListener('change', function () {
 
 
 document.getElementById('addBtn').addEventListener('click', function () {
-    //let myCollection = new Collection();
     let type = document.getElementById('myChoice');
     let categoryChoice = type.options[type.selectedIndex].text;
     let title = document.getElementById('titre').value;
@@ -335,9 +355,7 @@ document.getElementById('addBtn').addEventListener('click', function () {
         let newAlbum = new Album(title, releaseDate, rating, image, artists, nbTracks);
         console.log(newAlbum);
         myCollection.add(newAlbum);
-        addInLocalStorage(newAlbum);
-        //  let localStorageCollection = JSON.parse(localStorage.getItem('collection'));
-        //myCollection = localStorageToCollection(myCollection, localStorageCollection);
+        myCollection.addInLocalStorage(newAlbum);
         displayCollection(myCollection);
 
         console.log(myCollection);
@@ -348,7 +366,7 @@ document.getElementById('addBtn').addEventListener('click', function () {
         let newGame = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
         console.log(newGame);
         myCollection.add(newGame);
-        addInLocalStorage(newGame);
+        myCollection.addInLocalStorage(newGame);
         displayCollection(myCollection);
 
         console.log(myCollection);
@@ -360,7 +378,7 @@ document.getElementById('addBtn').addEventListener('click', function () {
         let newMovie = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
         console.log(newMovie);
         myCollection.add(newMovie);
-        addInLocalStorage(newMovie);
+        myCollection.addInLocalStorage(newMovie);
         displayCollection(myCollection);
 
         console.log(myCollection);
@@ -369,6 +387,14 @@ document.getElementById('addBtn').addEventListener('click', function () {
 
 });
 
+function deleteFromTitle(title) {
+    console.log(title);
+    myCollection.delete(title);
+    myCollection.deleteFromLocalStorage(title);
+    displayCollection(myCollection);
+}
+
+    
 
 
 
