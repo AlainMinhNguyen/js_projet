@@ -2,7 +2,6 @@ import { Album } from './Album.js';
 import { Collection } from './Collection.js';
 import { Game } from './Game.js';
 import { Movie } from './Movie.js';
-import { Media } from './Media.js';
 
 function displayCollection(collection) {
     let html = '';
@@ -14,18 +13,22 @@ function displayCollection(collection) {
     let year;
     let icon;
     collection.items.forEach(element => {
+        console.log(element);
         i = 0;
         ratinghtml = '';
         for (i; i < element.rating; i++) {
-            ratinghtml += '<span class="fa fa-star checked"></span>';
+           ratinghtml += '<span class="fa fa-star checked"></span>';
         }
         for (i; i < 5; i++) {
             ratinghtml += '<span class="fa fa-star"></span>';
         }
 
-        // day = ("0" + element.date.getDate()).slice(-2);
-        // month = ("0" + parseInt(parseInt(element.date.getMonth()) + 1)).slice(-2)
-        // year = ("0" + element.date.getFullYear()).slice(-4);
+        day = ("0" + element.releaseDate.getDate()).slice(-2);
+        month = ("0" + parseInt(parseInt(element.releaseDate.getMonth()) + 1)).slice(-2)
+        year = ("0" + element.releaseDate.getFullYear()).slice(-4);
+
+        console.log(day, month, year);
+
 
         switch (element.getType()) {
             case "album":
@@ -41,18 +44,38 @@ function displayCollection(collection) {
                 icon = "error";
                 break;
         }
+        console.log(icon);
 
         html += `
         <div class="card card-`+ element.getType() + `">
         <img class="card-img-top"
-            src="`+ element.image + `"
+            src="`+ element.img + `"
             alt="Card image cap">
         <div class="card-body">
 
             <h5 class="card-title"><span class="material-symbols-outlined">`+ icon + `</span> ` + element.title + `</h5>
             <span class="card-date">Released the `+ month + `/` + day + `/` + year + `</span>
-            <p class="card-text">`+ element.description + `</p>
-
+        `
+        if (element.getType() == "album") {
+            html += `<br><span class="grey-info">Number of track : ` + element.nbTracks + `</span><p class="card-text">`+ element.artists +
+            `<br></p>`
+        }
+        if (element.getType() == "game") {
+            html += `<p class="card-text">`+ element.plot +
+            `<br><br><span class="grey-info">Number of players : ` + element.nbPlayers + `</span><br>
+            <span class="grey-info">Studio : ` + element.studio + `</span><br>
+            
+            </p>`
+        }
+        if (element.getType() == "movie") {
+            html += `<p class="card-text">`+ element.plot +
+            `<br><br>
+            <span class="grey-info">Director : ` + element.director + `</span><br>
+            <span class="grey-info">Actors : ` + element.actors + `</span><br>
+            <span class="grey-info">Duration : ` + element.duration + `</span>
+            </p>`
+        }
+        html += `
             <p class="card-rating">
                 Rating :
                 `+ ratinghtml + `
@@ -69,7 +92,7 @@ function displayCollection(collection) {
     </div>
         `;
     });
-
+    console.log(html);
 
     document.getElementById('media-container').innerHTML += html;
 }
@@ -93,10 +116,10 @@ function localStorageToCollection(collection, localStorage) {
                 console.log(test);
                 break;
             case "game":
-                collection.add(new Game(element.image, element.title, new Date(element.date), element.description, element.rating));
+                collection.add(new Game(element.title, new Date(element.releaseDate), element.rating, element.img, element.studio, element.nbPlayers, element.plot));
                 break;
             case "movie":
-                collection.add(new Movie(element.image, element.title, new Date(element.date), element.description, element.rating));
+                collection.add(new Movie(element.title, new Date(element.releaseDate), element.rating, element.img, element.director, element.actors, element.duration, element.plot));
                 break;
             default:
                 break;
@@ -187,7 +210,9 @@ type.addEventListener('change', function () {
       </div>';
 
     let specificForm = '<div class="border-top my-3"></div><p class="text-center">SPECIFIC</p><div class="border-top my-3"></div>';
+
     document.getElementById('general').innerHTML = generalForm;
+
 
     switch (categoryChoice) {
         case "Album":
@@ -293,7 +318,6 @@ type.addEventListener('change', function () {
     }
     document.getElementById('specific').innerHTML = specificForm;
 
-
 });
 
 
@@ -324,8 +348,11 @@ document.getElementById('addBtn').addEventListener('click', function () {
         let newMovie = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
         console.log(newMovie);
     }
+    
 
 });
+
+    
 
 
 
@@ -335,54 +362,68 @@ document.getElementById('addBtn').addEventListener('click', function () {
 
 let myCollection = new Collection();
 
-let myAlbum1image = 'https://lh3.googleusercontent.com/tLUmjnIvbPMklG1KkKE5QDuZ3DlEmhZLMGDsz5cliFgu61rYKZ93MZ_yoxEAqHTUP1DW-ICZZ2IVAac7=w544-h544-l90-rj';
+
 let myAlbum1title = '86 EIGHTY-SIX original soundtrack';
 let myAlbum1date = new Date('2021-03-10');
-let myAlbum1artist = 'Album • Hiroyuki Sawano et KOHTA YAMAMOTO';
-let myAlbum1tracks = 42;
 let myAlbum1rating = 5;
+let myAlbum1image = 'https://lh3.googleusercontent.com/tLUmjnIvbPMklG1KkKE5QDuZ3DlEmhZLMGDsz5cliFgu61rYKZ93MZ_yoxEAqHTUP1DW-ICZZ2IVAac7=w544-h544-l90-rj';
+let myAlbum1artist = 'Hiroyuki Sawano et KOHTA YAMAMOTO';
+let myAlbum1tracks = 42;
 
 let myAlbum1 = new Album(myAlbum1title, myAlbum1date, myAlbum1rating, myAlbum1image, myAlbum1artist, myAlbum1tracks);
 
-let myAlbum2image = 'https://i.ytimg.com/vi/72PhV7wQr5Y/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBiZF0kxjQPLqLYBnG-DzsdK3_Y5g'
+
 let myAlbum2title = 'OST | 原神/Genshin Impact/げんしん/원신'
 let myAlbum2date = new Date('2021-03-10');
-let myAlbum2description = '429 vidéos'
 let myAlbum2rating = 5
+let myAlbum2image = 'https://i.ytimg.com/vi/72PhV7wQr5Y/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBiZF0kxjQPLqLYBnG-DzsdK3_Y5g'
+let myAlbum2artist = 'Mihoyo';
+let myAlbum2tracks = 42;
 
-let myAlbum2 = new Album(myAlbum2image, myAlbum2title, myAlbum2date, myAlbum2description, myAlbum2rating);
+let myAlbum2 = new Album(myAlbum2title, myAlbum2date, myAlbum2rating, myAlbum2image, myAlbum2artist, myAlbum2tracks);
 
-let myGame1image = 'https://jolstatic.fr/www/captures/1876/6/156236-320.jpg'
 let myGame1title = 'Black desert online'
 let myGame1date = new Date('2021-03-10');
-let myGame1description = 'Black Desert Online is a sandbox-oriented fantasy massively multiplayer online role-playing game developed by Korean video game developer Pearl Abyss and originally published for Microsoft Windows in 2015.'
 let myGame1rating = 4
+let myGame1image = 'https://jolstatic.fr/www/captures/1876/6/156236-320.jpg'
+let myGame1studio = 'Pearl Abyss';
+let myGame1nbplayers = 'unlimited';
+let myGame1plot = 'Black Desert Online is a sandbox-oriented fantasy massively multiplayer online role-playing game developed by Korean video game developer Pearl Abyss and originally published for Microsoft Windows in 2015.'
 
-let myGame1 = new Game(myGame1image, myGame1title, myGame1date, myGame1description, myGame1rating);
 
-let myGame2image = 'https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_GenshinImpact_miHoYoLimited_S2_1200x1600-c12cdcc2cac330df2185aa58c508e820'
+let myGame1 = new Game(myGame1title, myGame1date, myGame1rating, myGame1image, myGame1studio, myGame1nbplayers, myGame1plot);
+
 let myGame2title = 'Genshin Impact'
 let myGame2date = new Date('2021-03-10');
-let myGame2description = 'Genshin Impact is an action role-playing game developed and published by miHoYo. It was released for Microsoft Windows, PlayStation 4, iOS, and Android in 2020, on PlayStation 5 in 2021, and is set for release on Nintendo Switch.'
 let myGame2rating = 4
+let myGame2image = 'https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_GenshinImpact_miHoYoLimited_S2_1200x1600-c12cdcc2cac330df2185aa58c508e820'
+let myGame2studio = 'miHoYo';
+let myGame2nbplayers = 4;
+let myGame2plot = 'Genshin Impact is an action role-playing game developed and published by miHoYo. It was released for Microsoft Windows, PlayStation 4, iOS, and Android in 2020, on PlayStation 5 in 2021, and is set for release on Nintendo Switch.'
 
-let myGame2 = new Game(myGame2image, myGame2title, myGame2date, myGame2description, myGame2rating);
+let myGame2 = new Game(myGame2title, myGame2date, myGame2rating, myGame2image, myGame2studio, myGame2nbplayers, myGame2plot);
 
-let myMovie1image = 'https://www.nautiljon.com/images/anime/00/20/mini/fate_stay_night_heaven_s_feel_i_presage_flower_4702.jpg?11528565156'
 let myMovie1title = 'Fate/stay night: Heaven\'s Feel I. presage flower'
 let myMovie1date = new Date('2021-03-10');
-let myMovie1description = 'High school student Shirou finds himself at the centre of an ancient war between wizards to claim a magical artefact.'
 let myMovie1rating = 4
+let myMovie1image = 'https://www.nautiljon.com/images/anime/00/20/mini/fate_stay_night_heaven_s_feel_i_presage_flower_4702.jpg?11528565156'
+let myMovie1director = 'Tomonori Sudou';
+let myMovie1actors = 'Person, Person, Person';
+let myMovie1duration = '2h 10min';
+let myMovie1plot = 'High school student Shirou finds himself at the centre of an ancient war between wizards to claim a magical artefact.'
 
-let myMovie1 = new Movie(myMovie1image, myMovie1title, myMovie1date, myMovie1description, myMovie1rating);
+let myMovie1 = new Movie(myMovie1title, myMovie1date, myMovie1rating, myMovie1image, myMovie1director, myMovie1actors, myMovie1duration, myMovie1plot);
 
-let myMovie2image = 'https://www.nautiljon.com/images/anime/00/91/mini/fate_stay_night_heaven_s_feel_ii_lost_butterfly_5719.jpg?11567168184'
 let myMovie2title = 'Fate/stay night: Heaven\'s Feel II. lost butterfly'
 let myMovie2date = new Date('2021-03-10');
-let myMovie2description = 'Fate/stay night: Heaven\'s Feel II. lost butterfly is a 2019 Japanese anime fantasy film produced by ufotable and directed by Tomonori Sudō. The second installment in the Fate/stay night: Heaven\'s Feel trilogy, it premiered in Japan on January 12, 2019 and in the United States on March 14, 2019.'
 let myMovie2rating = 3
+let myMovie2image = 'https://www.nautiljon.com/images/anime/00/91/mini/fate_stay_night_heaven_s_feel_ii_lost_butterfly_5719.jpg?11567168184'
+let myMovie2director = 'Tomonori Sudou';
+let myMovie2actors = 'Person, Person, Person';
+let myMovie2duration = '2h 10min';
+let myMovie2plot = 'Fate/stay night: Heaven\'s Feel II. lost butterfly is a 2019 Japanese anime fantasy film produced by ufotable and directed by Tomonori Sudō. The second installment in the Fate/stay night: Heaven\'s Feel trilogy, it premiered in Japan on January 12, 2019 and in the United States on March 14, 2019.'
 
-let myMovie2 = new Movie(myMovie2image, myMovie2title, myMovie2date, myMovie2description, myMovie2rating);
+let myMovie2 = new Movie(myMovie2title, myMovie2date, myMovie2rating, myMovie2image, myMovie2director, myMovie2actors, myMovie2duration, myMovie2plot);
 
 //------------------Ajout dand la collection exemples------------------
 myCollection.add(myAlbum1);
@@ -390,7 +431,7 @@ myCollection.add(myGame1);
 myCollection.add(myMovie1);
 myCollection.add(myAlbum2);
 myCollection.add(myMovie2);
-//localStorage.clear(); //vider le local storage
+localStorage.clear(); //vider le local storage
 addInLocalStorage(myGame2);
 
 //------------------Ajout des données en localStorage dans la collection------------------

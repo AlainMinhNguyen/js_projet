@@ -150,4 +150,8 @@ header .selected {
 
 .rating-submit:hover {
   color: #fff;
+}
+
+.grey-info {
+  color: grey;
 }/*# sourceMappingURL=style.css.map */
