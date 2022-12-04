@@ -17,22 +17,24 @@ export class Collection {
     }
 
 
-    removeMedia(title) {
+    removeMedia(id) {
         let collection = JSON.parse(localStorage.getItem('collection'));
         if (collection == null) {
             collection = [];
         }
-        for (let i = 0; i < collection.length; i++) {
-            if (collection[i].title == title) {
-                collection.splice(i, 1);
+        console.log(id);
+        console.log(collection);
+        collection.forEach(element => {
+            if (element.id == id) {
+                collection.splice(collection.indexOf(element), 1);
             }
-        }
+        });
         localStorage.setItem('collection', JSON.stringify(collection));
     }
 
 
 
-    getItems() {
-        return this.items;
-    }
+getItems() {
+    return this.items;
+}
 }

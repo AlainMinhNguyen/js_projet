@@ -49,50 +49,20 @@ function displayCollection(collection) {
         <div class="card-body">
 
             <h5 class="card-title"><span class="material-symbols-outlined">`+ icon + `</span> ` + element.title + `</h5>
-            <span class="card-date">Released the `+ month + `-` + day + `-` + year +`</span>
+            <span class="card-date">Released the `+ month + `-` + day + `-` + year + `</span>
         `;
         if (element.getType() == "album") {
             html += `<br><span class="grey-info">Number of track : ` + element.nbTracks + `</span><p class="card-text">` + element.artists +
-                `<br></p>`
-                html += `
-                <p class="card-rating">
-                    Rating :
-                    `+ ratinghtml + `
-                </p>
-                <div class="card-buttons">
-                    <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
-                        edit_square
-                    </span> edit</a>
-                    <button type="button" id="`+ element.title.replace(/ /g, '') + `" onclick="deleteFromTitle(`+ element.title +`);" class="btn btn-primary"><span class="material-symbols-outlined">
-                            delete
-                        </span> remove</button>
-                </div>
-            </div>
-        </div>
+                `<br></p>
             `;
 
         }
         if (element.getType() == "game") {
             html += `<p class="card-text">` + element.plot +
                 `<br><br><span class="grey-info">Number of players : ` + element.nbPlayers + `</span><br>
-            <span class="grey-info">Studio : ` + "Rm-" + element.studio + `</span><br>
+            <span class="grey-info">Studio : ` + element.studio + `</span><br>
             
-            </p>`
-            html += `
-            <p class="card-rating">
-                Rating :
-                `+ ratinghtml + `
             </p>
-            <div class="card-buttons">
-                <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
-                    edit_square
-                </span> edit</a>
-                <button type="button" id="` + "Rm-"+ element.title.replace(/ /g, '') + `"  class="btn btn-primary"><span class="material-symbols-outlined">
-                        delete
-                    </span> remove</button>
-            </div>
-        </div>
-    </div>
         `;
         }
         if (element.getType() == "movie") {
@@ -103,22 +73,22 @@ function displayCollection(collection) {
             <span class="grey-info">Duration : ` + element.duration + ` min ` + `</span>
             </p>`
             html += `
-            <p class="card-rating">
-                Rating :
-                `+ ratinghtml + `
-            </p>
-            <div class="card-buttons">
-                <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
-                    edit_square
-                </span> edit</a>
-                <button type="button" id="` + "Rm-" + element.title.replace(/ /g, '') + `"  class="btn btn-primary"><span class="material-symbols-outlined">
-                        delete
-                    </span> remove</button>
-            </div>
-        </div>
-    </div>
         `;
         }
+        html += `            <p class="card-rating">
+        Rating :
+        `+ ratinghtml + `
+    </p>
+    <div class="card-buttons">
+        <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
+            edit_square
+        </span> edit</a>
+        <button type="button" remove-id="` + element.id + `"  class="btn btn-primary remove-btn"><span class="material-symbols-outlined">
+                delete
+            </span> remove</button>
+    </div>
+</div>
+</div>`
     });
 
     document.getElementById('media-container').innerHTML = html;
@@ -130,13 +100,19 @@ function localStorageToCollection(collection, localStorage) {
     localStorage.forEach(element => {
         switch (element.type) {
             case "album":
-                collection.add(new Album(element.title, new Date(element.releaseDate), element.rating, element.img, element.artists, element.nbTracks));
+                let album = new Album(element.title, new Date(element.releaseDate), element.rating, element.img, element.artists, element.nbTracks);
+                album.setId(element.id);
+                collection.add(album);
                 break;
             case "game":
-                collection.add(new Game(element.title, new Date(element.releaseDate), element.rating, element.img, element.studio, element.nbPlayers, element.plot));
+                let game = new Game(element.title, new Date(element.releaseDate), element.rating, element.img, element.studio, element.nbPlayers, element.plot);
+                game.setId(element.id);
+                collection.add(game);
                 break;
             case "movie":
-                collection.add(new Movie(element.title, new Date(element.releaseDate), element.rating, element.img, element.director, element.actors, element.duration, element.plot));
+                let movie = new Movie(element.title, new Date(element.releaseDate), element.rating, element.img, element.director, element.actors, element.duration, element.plot);
+                movie.setId(element.id);
+                collection.add(movie);
                 break;
             default:
                 break;
@@ -319,10 +295,6 @@ type.addEventListener('change', function () {
                         document.getElementById('duration').value = durationToAPI
                         document.getElementById('plot').value = plotToAPI;
                         console.log(titleToAPI, dateToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
-
-                        // let newMovieWithAPI = new Movie(titleToAPI, dateToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
-                        // console.log(newMovieWithAPI);
-
                     })
                     .catch(error => {
                         console.log('erreur ', error)
@@ -349,55 +321,42 @@ document.getElementById('addBtn').addEventListener('click', function () {
     let releaseDate = new Date(document.getElementById('ReleaseDate').value);
     let rating = document.querySelector('input[name="rating"]:checked').value;
     let image = document.getElementById('basic-url').value;
+    let newMedia;
     if (categoryChoice == "Album") {
         let artists = document.getElementById('artists').value;
         let nbTracks = document.getElementById('nbTracks').value;
-        let newAlbum = new Album(title, releaseDate, rating, image, artists, nbTracks);
-        console.log(newAlbum);
-        myCollection.add(newAlbum);
-        myCollection.addMedia(newAlbum);
-        displayCollection(myCollection);
-
-        console.log(myCollection);
+        ewMedia = new Album(title, releaseDate, rating, image, artists, nbTracks);
     } else if (categoryChoice == "Game") {
         let studio = document.getElementById('studio').value;
         let nbPlayers = document.getElementById('nbPlayers').value;
         let plot = document.getElementById('plot').value;
-        let newGame = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
+        newMedia = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
         console.log(newGame);
-        myCollection.add(newGame);
-        myCollection.addMedia(newGame);
-        displayCollection(myCollection);
-
-        console.log(myCollection);
     } else if (categoryChoice == "Movie") {
         let director = document.getElementById('director').value;
         let actors = document.getElementById('actors').value;
         let duration = document.getElementById('duration').value;
         let plot = document.getElementById('plot').value;
-        let newMovie = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
-        console.log(newMovie);
-        myCollection.add(newMovie);
-        myCollection.addMedia(newMovie);
-        displayCollection(myCollection);
-
-        console.log(myCollection);
+        newMedia = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
     }
-
-
+    console.log(newMedia);
+    myCollection.add(newMedia);
+    myCollection.addMedia(newMedia);
+    displayCollection(myCollection);
+    removeListeners();
 });
 
-
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     let removeBtn = document.getElementById('Rm-Avatar');
-//     removeBtn.addEventListener('click', function () {
-//         console.log('OK');
-//         myCollection.removeMedia(title);
-//         displayCollection(myCollection);
-//     });
-// });
-
+function removeListeners() {
+    let removeBtns = document.querySelectorAll('.remove-btn');
+    removeBtns.forEach(function (removeBtn) {
+        removeBtn.addEventListener('click', function () {
+            console.log(this.getAttribute('remove-id'));
+            myCollection.removeMedia(this.getAttribute('remove-id'));
+            displayCollection(myCollection);
+            removeListeners();
+        });
+    });
+}
 
 //------------------Creation d'objets exemple------------------
 
@@ -482,3 +441,4 @@ if (localStorage.getItem('collection') != null) {
 }
 //------------------Affichage------------------
 displayCollection(myCollection);
+removeListeners();
