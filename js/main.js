@@ -80,9 +80,9 @@ function displayCollection(collection) {
         `+ ratinghtml + `
     </p>
     <div class="card-buttons">
-        <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
+        <button type="button" class="btn btn-secondary" disabled><span class="material-symbols-outlined" >
             edit_square
-        </span> edit</a>
+        </span></button>
         <button type="button" remove-id="` + element.id + `"  class="btn btn-primary remove-btn"><span class="material-symbols-outlined">
                 delete
             </span> remove</button>
