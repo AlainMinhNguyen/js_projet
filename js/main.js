@@ -13,7 +13,6 @@ function displayCollection(collection) {
     let year;
     let icon;
     collection.items.forEach(element => {
-        console.log(element);
         i = 0;
         ratinghtml = '';
         for (i; i < element.rating; i++) {
@@ -26,9 +25,6 @@ function displayCollection(collection) {
         day = ("0" + element.releaseDate.getDate()).slice(-2);
         month = ("0" + parseInt(parseInt(element.releaseDate.getMonth()) + 1)).slice(-2)
         year = ("0" + element.releaseDate.getFullYear()).slice(-4);
-
-        console.log(day, month, year);
-
 
         switch (element.getType()) {
             case "album":
@@ -44,7 +40,6 @@ function displayCollection(collection) {
                 icon = "error";
                 break;
         }
-        console.log(icon);
 
         html += `
         <div class="card card-`+ element.getType() + `">
@@ -54,18 +49,21 @@ function displayCollection(collection) {
         <div class="card-body">
 
             <h5 class="card-title"><span class="material-symbols-outlined">`+ icon + `</span> ` + element.title + `</h5>
-            <span class="card-date">Released the `+ month + `-` + day + `-` + year +`</span>
-        `
+            <span class="card-date">Released the `+ month + `-` + day + `-` + year + `</span>
+        `;
         if (element.getType() == "album") {
             html += `<br><span class="grey-info">Number of track : ` + element.nbTracks + `</span><p class="card-text">` + element.artists +
-                `<br></p>`
+                `<br></p>
+            `;
+
         }
         if (element.getType() == "game") {
             html += `<p class="card-text">` + element.plot +
                 `<br><br><span class="grey-info">Number of players : ` + element.nbPlayers + `</span><br>
             <span class="grey-info">Studio : ` + element.studio + `</span><br>
             
-            </p>`
+            </p>
+        `;
         }
         if (element.getType() == "movie") {
             html += `<p class="card-text">` + element.plot +
@@ -74,57 +72,60 @@ function displayCollection(collection) {
             <span class="grey-info">Actors : ` + element.actors + `</span><br>
             <span class="grey-info">Duration : ` + element.duration + ` min ` + `</span>
             </p>`
-        }
-        html += `
-            <p class="card-rating">
-                Rating :
-                `+ ratinghtml + `
-            </p>
-            <div class="card-buttons">
-                <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
-                    edit_square
-                </span> edit</a>
-                <a href="#" class="btn btn-primary"><span class="material-symbols-outlined">
-                        delete
-                    </span> remove</a>
-            </div>
-        </div>
-    </div>
+            html += `
         `;
+        }
+        html += `            <p class="card-rating">
+        Rating :
+        `+ ratinghtml + `
+    </p>
+    <div class="card-buttons">
+        <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
+            edit_square
+        </span> edit</a>
+        <button type="button" remove-id="` + element.id + `"  class="btn btn-primary remove-btn"><span class="material-symbols-outlined">
+                delete
+            </span> remove</button>
+    </div>
+</div>
+</div>`
     });
 
     document.getElementById('media-container').innerHTML = html;
 }
 
 
-//à utiliser quand on add un item
-function addInLocalStorage(item) {
-    let collection = JSON.parse(localStorage.getItem('collection'));
-    if (collection == null) {
-        collection = [];
-    }
-    collection.push(item);
-    localStorage.setItem('collection', JSON.stringify(collection));
-}
 
 function localStorageToCollection(collection, localStorage) {
     localStorage.forEach(element => {
         switch (element.type) {
             case "album":
-                let test = collection.add(new Album(element.title, new Date(element.releaseDate), element.rating, element.img, element.artists, element.nbTracks));
-                console.log('test : ', test);
+                let album = new Album(element.title, new Date(element.releaseDate), element.rating, element.img, element.artists, element.nbTracks);
+                album.setId(element.id);
+                collection.add(album);
                 break;
             case "game":
-                collection.add(new Game(element.title, new Date(element.releaseDate), element.rating, element.img, element.studio, element.nbPlayers, element.plot));
+                let game = new Game(element.title, new Date(element.releaseDate), element.rating, element.img, element.studio, element.nbPlayers, element.plot);
+                game.setId(element.id);
+                collection.add(game);
                 break;
             case "movie":
-                collection.add(new Movie(element.title, new Date(element.releaseDate), element.rating, element.img, element.director, element.actors, element.duration, element.plot));
+                let movie = new Movie(element.title, new Date(element.releaseDate), element.rating, element.img, element.director, element.actors, element.duration, element.plot);
+                movie.setId(element.id);
+                collection.add(movie);
                 break;
             default:
                 break;
         }
     });
     return collection;
+}
+
+function localStorageManage() {
+    if (localStorage.getItem('collection') != null) {
+        let localStorageCollection = JSON.parse(localStorage.getItem('collection'));
+        myCollection = localStorageToCollection(myCollection, localStorageCollection);
+    }
 }
 
 //------------------Evenements------------------
@@ -301,12 +302,11 @@ type.addEventListener('change', function () {
                         document.getElementById('duration').value = durationToAPI
                         document.getElementById('plot').value = plotToAPI;
                         console.log(titleToAPI, dateToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
-
-                        // let newMovieWithAPI = new Movie(titleToAPI, dateToAPI, imageToAPI, directorToAPI, actorsToAPI, durationToAPI, plotToAPI);
-                        // console.log(newMovieWithAPI);
-
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => {
+                        console.log('erreur ', error)
+                        document.getElementById('titre').value = 'Movie not found';
+                    });
             });
 
             break;
@@ -322,58 +322,49 @@ type.addEventListener('change', function () {
 
 
 document.getElementById('addBtn').addEventListener('click', function () {
-    //let myCollection = new Collection();
     let type = document.getElementById('myChoice');
     let categoryChoice = type.options[type.selectedIndex].text;
     let title = document.getElementById('titre').value;
     let releaseDate = new Date(document.getElementById('ReleaseDate').value);
     let rating = document.querySelector('input[name="rating"]:checked').value;
     let image = document.getElementById('basic-url').value;
+    let newMedia;
     if (categoryChoice == "Album") {
         let artists = document.getElementById('artists').value;
         let nbTracks = document.getElementById('nbTracks').value;
-        let newAlbum = new Album(title, releaseDate, rating, image, artists, nbTracks);
-        console.log(newAlbum);
-        myCollection.add(newAlbum);
-        addInLocalStorage(newAlbum);
-        //  let localStorageCollection = JSON.parse(localStorage.getItem('collection'));
-        //myCollection = localStorageToCollection(myCollection, localStorageCollection);
-        displayCollection(myCollection);
-
-        console.log(myCollection);
+        ewMedia = new Album(title, releaseDate, rating, image, artists, nbTracks);
     } else if (categoryChoice == "Game") {
         let studio = document.getElementById('studio').value;
         let nbPlayers = document.getElementById('nbPlayers').value;
         let plot = document.getElementById('plot').value;
-        let newGame = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
+        newMedia = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
         console.log(newGame);
-        myCollection.add(newGame);
-        addInLocalStorage(newGame);
-        displayCollection(myCollection);
-
-        console.log(myCollection);
     } else if (categoryChoice == "Movie") {
         let director = document.getElementById('director').value;
         let actors = document.getElementById('actors').value;
         let duration = document.getElementById('duration').value;
         let plot = document.getElementById('plot').value;
-        let newMovie = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
-        console.log(newMovie);
-        myCollection.add(newMovie);
-        addInLocalStorage(newMovie);
-        displayCollection(myCollection);
-
-        console.log(myCollection);
+        newMedia = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
     }
-
-
+    console.log(newMedia);
+    myCollection.add(newMedia);
+    myCollection.addMedia(newMedia);
+    displayCollection(myCollection);
+    removeListeners();
 });
 
-
-
-
-
-
+function removeListeners() {
+    let removeBtns = document.querySelectorAll('.remove-btn');
+    removeBtns.forEach(function (removeBtn) {
+        removeBtn.addEventListener('click', function () {
+            console.log(this.getAttribute('remove-id'));
+            myCollection.removeMedia(this.getAttribute('remove-id'));
+            localStorageManage();
+            displayCollection(myCollection);
+            removeListeners();
+        });
+    });
+}
 
 //------------------Creation d'objets exemple------------------
 
@@ -452,10 +443,8 @@ myCollection.add(myGame2);
 
 //------------------Ajout des données en localStorage dans la collection------------------
 //localStorage.clear(); //vider le local storage
-if (localStorage.getItem('collection') != null) {
-    let localStorageCollection = JSON.parse(localStorage.getItem('collection'));
-    myCollection = localStorageToCollection(myCollection, localStorageCollection);
-}
+
+localStorageManage();
 //------------------Affichage------------------
 displayCollection(myCollection);
-
+removeListeners();
