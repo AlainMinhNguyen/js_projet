@@ -168,11 +168,34 @@ document.getElementById('navMovies').addEventListener('click', function () {
     document.getElementById('navAlbums').classList.remove('selected');
     document.getElementById('navGames').classList.remove('selected');
     document.getElementById('navMovies').classList.add('selected');
+
     Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'none');
     Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'none');
     Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'block');
 });
+
+
+// select for sorting
+document.getElementById('sort-select').addEventListener('change', function () {
+    let sort = document.getElementById('sort-select').value;
+    switch (sort) {
+        case "1":
+            myCollection.sortByTitle();
+            break;
+        case "2":
+            myCollection.sortByDate();
+            break;
+        case "3":
+            myCollection.sortByRating();
+        break;
+        default:
+            break;
+    }
+    displayCollection(myCollection);
+});
+    
 //------------------MAIN------------------
+
 
 let type = document.getElementById('myChoice');
 type.addEventListener('change', function () {
@@ -382,7 +405,7 @@ let myAlbum1 = new Album(myAlbum1title, myAlbum1date, myAlbum1rating, myAlbum1im
 
 
 let myAlbum2title = 'OST | 原神/Genshin Impact/げんしん/원신'
-let myAlbum2date = new Date('2021-03-10');
+let myAlbum2date = new Date('2021-01-10');
 let myAlbum2rating = 5
 let myAlbum2image = 'https://i.ytimg.com/vi/72PhV7wQr5Y/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBiZF0kxjQPLqLYBnG-DzsdK3_Y5g'
 let myAlbum2artist = 'Mihoyo';
@@ -391,7 +414,7 @@ let myAlbum2tracks = 42;
 let myAlbum2 = new Album(myAlbum2title, myAlbum2date, myAlbum2rating, myAlbum2image, myAlbum2artist, myAlbum2tracks);
 
 let myGame1title = 'Black desert online'
-let myGame1date = new Date('2021-03-10');
+let myGame1date = new Date('2009-03-10');
 let myGame1rating = 4
 let myGame1image = 'https://jolstatic.fr/www/captures/1876/6/156236-320.jpg'
 let myGame1studio = 'Pearl Abyss';
@@ -402,7 +425,7 @@ let myGame1plot = 'Black Desert Online is a sandbox-oriented fantasy massively m
 let myGame1 = new Game(myGame1title, myGame1date, myGame1rating, myGame1image, myGame1studio, myGame1nbplayers, myGame1plot);
 
 let myGame2title = 'Genshin Impact'
-let myGame2date = new Date('2021-03-10');
+let myGame2date = new Date('2011-03-11');
 let myGame2rating = 4
 let myGame2image = 'https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_GenshinImpact_miHoYoLimited_S2_1200x1600-c12cdcc2cac330df2185aa58c508e820'
 let myGame2studio = 'miHoYo';

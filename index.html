@@ -37,6 +37,14 @@
                             </span> Movies</a>
                     </li>
                 </ul>
+                <div>
+                  <select id="sort-select" class="form-select" aria-label="Default select example">
+                    <option selected disabled>Sort by</option>
+                    <option value="1">Title (A-Z)</option>
+                    <option value="2">Date (lastest)</option>
+                    <option value="3">Rating (better)</option>
+                  </select>
+                </div>
             </div>
         </nav>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addmedia">
@@ -46,7 +54,7 @@
     <div id="media-container"></div>
 
 <!-- Modal for add media -->
-<div class="modal fade" id="addmedia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addmedia" tabindex="-1" aria-labelledby="formForAddMedia" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
