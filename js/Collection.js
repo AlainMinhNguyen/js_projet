@@ -22,8 +22,11 @@ export class Collection {
         if (collection == null) {
             collection = [];
         }
-        console.log(id);
-        console.log(collection);
+        this.items.forEach((item, index) => {
+            if (item.id == id) {
+                this.items.splice(index, 1);
+            }
+        });
         collection.forEach(element => {
             if (element.id == id) {
                 collection.splice(collection.indexOf(element), 1);

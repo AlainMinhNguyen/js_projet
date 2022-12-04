@@ -121,6 +121,13 @@ function localStorageToCollection(collection, localStorage) {
     return collection;
 }
 
+function localStorageManage() {
+    if (localStorage.getItem('collection') != null) {
+        let localStorageCollection = JSON.parse(localStorage.getItem('collection'));
+        myCollection = localStorageToCollection(myCollection, localStorageCollection);
+    }
+}
+
 //------------------Evenements------------------
 document.getElementById('navAll').addEventListener('click', function () {
     console.log('All');
@@ -352,6 +359,7 @@ function removeListeners() {
         removeBtn.addEventListener('click', function () {
             console.log(this.getAttribute('remove-id'));
             myCollection.removeMedia(this.getAttribute('remove-id'));
+            localStorageManage();
             displayCollection(myCollection);
             removeListeners();
         });
@@ -435,10 +443,8 @@ myCollection.add(myGame2);
 
 //------------------Ajout des données en localStorage dans la collection------------------
 //localStorage.clear(); //vider le local storage
-if (localStorage.getItem('collection') != null) {
-    let localStorageCollection = JSON.parse(localStorage.getItem('collection'));
-    myCollection = localStorageToCollection(myCollection, localStorageCollection);
-}
+
+localStorageManage();
 //------------------Affichage------------------
 displayCollection(myCollection);
 removeListeners();
