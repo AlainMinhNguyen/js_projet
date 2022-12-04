@@ -383,6 +383,10 @@ document.getElementById('addBtn').addEventListener('click', function () {
             myCollection.addMedia(newMedia);
             displayCollection(myCollection);
             removeListeners();
+            // vide le formulaire
+            document.getElementById('general').innerHTML = '<p></p>';
+            document.getElementById('specific').innerHTML = '<div class="alert alert-success" role="alert">Your media was successfully added!!</div>';
+            
         }
     
 });
