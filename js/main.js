@@ -80,9 +80,9 @@ function displayCollection(collection) {
         `+ ratinghtml + `
     </p>
     <div class="card-buttons">
-        <a href="#" class="btn btn-secondary"><span class="material-symbols-outlined">
+        <button type="button" class="btn btn-secondary" disabled><span class="material-symbols-outlined" >
             edit_square
-        </span> edit</a>
+        </span></button>
         <button type="button" remove-id="` + element.id + `"  class="btn btn-primary remove-btn"><span class="material-symbols-outlined">
                 delete
             </span> remove</button>
@@ -168,11 +168,34 @@ document.getElementById('navMovies').addEventListener('click', function () {
     document.getElementById('navAlbums').classList.remove('selected');
     document.getElementById('navGames').classList.remove('selected');
     document.getElementById('navMovies').classList.add('selected');
+
     Array.from(document.getElementsByClassName('card-album')).forEach(container => container.style.display = 'none');
     Array.from(document.getElementsByClassName('card-game')).forEach(container => container.style.display = 'none');
     Array.from(document.getElementsByClassName('card-movie')).forEach(container => container.style.display = 'block');
 });
+
+
+// select for sorting
+document.getElementById('sort-select').addEventListener('change', function () {
+    let sort = document.getElementById('sort-select').value;
+    switch (sort) {
+        case "1":
+            myCollection.sortByTitle();
+            break;
+        case "2":
+            myCollection.sortByDate();
+            break;
+        case "3":
+            myCollection.sortByRating();
+            break;
+        default:
+            break;
+    }
+    displayCollection(myCollection);
+});
+
 //------------------MAIN------------------
+
 
 let type = document.getElementById('myChoice');
 type.addEventListener('change', function () {
@@ -185,9 +208,9 @@ type.addEventListener('change', function () {
     <div class="border-top my-3"></div> \
     <div class="mb-3"> \
       <label for="titre" class="col-form-label">Title</label> \
-      <input type="text" class="form-control" id="titre"> \
+      <input type="text" class="form-control" id="titre" required> \
       <label for="ReleaseDate" class="col-form-label">Release date</label> \
-      <input type="date" class="form-control" id="ReleaseDate"> \
+      <input type="date" class="form-control" id="ReleaseDate" required> \
       <label for="rating" class="col-form-label">Rating</label> \
       <div class="rating"> \
         <input type="radio" name="rating" value="5" id="5"> \
@@ -320,38 +343,54 @@ type.addEventListener('change', function () {
 });
 
 
-
 document.getElementById('addBtn').addEventListener('click', function () {
-    let type = document.getElementById('myChoice');
-    let categoryChoice = type.options[type.selectedIndex].text;
-    let title = document.getElementById('titre').value;
-    let releaseDate = new Date(document.getElementById('ReleaseDate').value);
-    let rating = document.querySelector('input[name="rating"]:checked').value;
-    let image = document.getElementById('basic-url').value;
-    let newMedia;
-    if (categoryChoice == "Album") {
-        let artists = document.getElementById('artists').value;
-        let nbTracks = document.getElementById('nbTracks').value;
-        ewMedia = new Album(title, releaseDate, rating, image, artists, nbTracks);
-    } else if (categoryChoice == "Game") {
-        let studio = document.getElementById('studio').value;
-        let nbPlayers = document.getElementById('nbPlayers').value;
-        let plot = document.getElementById('plot').value;
-        newMedia = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
-        console.log(newGame);
-    } else if (categoryChoice == "Movie") {
-        let director = document.getElementById('director').value;
-        let actors = document.getElementById('actors').value;
-        let duration = document.getElementById('duration').value;
-        let plot = document.getElementById('plot').value;
-        newMedia = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
-    }
-    console.log(newMedia);
-    myCollection.add(newMedia);
-    myCollection.addMedia(newMedia);
-    displayCollection(myCollection);
-    removeListeners();
+
+     if (document.getElementById('titre').value == '') {
+         alert('Please enter a title');
+        } else if (document.getElementById('ReleaseDate').value == '') {
+            alert('Please enter a release date');
+    } else if (document.querySelector('input[name="rating"]:checked')?.value == undefined) {
+         alert('Please enter a rating');
+        } else if (document.getElementById('basic-url').value == '') {
+            alert('Please enter an URL');
+        } else {
+        let type = document.getElementById('myChoice');
+        let categoryChoice = type.options[type.selectedIndex].text;
+        let title = document.getElementById('titre').value;
+        let releaseDate = new Date(document.getElementById('ReleaseDate')?.value);
+        let rating = document.querySelector('input[name="rating"]:checked').value;
+        let image = document.getElementById('basic-url').value;
+
+        let newMedia;
+            if (categoryChoice == "Album") {
+                let artists = document.getElementById('artists').value;
+                let nbTracks = document.getElementById('nbTracks').value;
+                newMedia = new Album(title, releaseDate, rating, image, artists, nbTracks);
+            } else if (categoryChoice == "Game" && document.getElementById('studio').value != '' && document.getElementById('nbPlayers').value != '' && document.getElementById('platform').value != '') {
+                let studio = document.getElementById('studio').value;
+                let nbPlayers = document.getElementById('nbPlayers').value;
+                let plot = document.getElementById('plot').value;
+                newMedia = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
+            } else if (categoryChoice == "Movie") {
+                let director = document.getElementById('director').value;
+                let actors = document.getElementById('actors').value;
+                let duration = document.getElementById('duration').value;
+                let plot = document.getElementById('plot').value;
+                newMedia = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
+            }
+            console.log(newMedia);
+            myCollection.add(newMedia);
+            myCollection.addMedia(newMedia);
+            displayCollection(myCollection);
+            removeListeners();
+            // vide le formulaire
+            document.getElementById('general').innerHTML = '<p></p>';
+            document.getElementById('specific').innerHTML = '<div class="alert alert-success" role="alert">Your media was successfully added!!</div>';
+            
+        }
+    
 });
+
 
 function removeListeners() {
     let removeBtns = document.querySelectorAll('.remove-btn');
@@ -382,7 +421,7 @@ let myAlbum1 = new Album(myAlbum1title, myAlbum1date, myAlbum1rating, myAlbum1im
 
 
 let myAlbum2title = 'OST | 原神/Genshin Impact/げんしん/원신'
-let myAlbum2date = new Date('2021-03-10');
+let myAlbum2date = new Date('2021-01-10');
 let myAlbum2rating = 5
 let myAlbum2image = 'https://i.ytimg.com/vi/72PhV7wQr5Y/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBiZF0kxjQPLqLYBnG-DzsdK3_Y5g'
 let myAlbum2artist = 'Mihoyo';
@@ -391,7 +430,7 @@ let myAlbum2tracks = 42;
 let myAlbum2 = new Album(myAlbum2title, myAlbum2date, myAlbum2rating, myAlbum2image, myAlbum2artist, myAlbum2tracks);
 
 let myGame1title = 'Black desert online'
-let myGame1date = new Date('2021-03-10');
+let myGame1date = new Date('2009-03-10');
 let myGame1rating = 4
 let myGame1image = 'https://jolstatic.fr/www/captures/1876/6/156236-320.jpg'
 let myGame1studio = 'Pearl Abyss';
@@ -402,7 +441,7 @@ let myGame1plot = 'Black Desert Online is a sandbox-oriented fantasy massively m
 let myGame1 = new Game(myGame1title, myGame1date, myGame1rating, myGame1image, myGame1studio, myGame1nbplayers, myGame1plot);
 
 let myGame2title = 'Genshin Impact'
-let myGame2date = new Date('2021-03-10');
+let myGame2date = new Date('2011-03-11');
 let myGame2rating = 4
 let myGame2image = 'https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_GenshinImpact_miHoYoLimited_S2_1200x1600-c12cdcc2cac330df2185aa58c508e820'
 let myGame2studio = 'miHoYo';
