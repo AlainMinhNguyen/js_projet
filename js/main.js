@@ -187,13 +187,13 @@ document.getElementById('sort-select').addEventListener('change', function () {
             break;
         case "3":
             myCollection.sortByRating();
-        break;
+            break;
         default:
             break;
     }
     displayCollection(myCollection);
 });
-    
+
 //------------------MAIN------------------
 
 
@@ -208,9 +208,9 @@ type.addEventListener('change', function () {
     <div class="border-top my-3"></div> \
     <div class="mb-3"> \
       <label for="titre" class="col-form-label">Title</label> \
-      <input type="text" class="form-control" id="titre"> \
+      <input type="text" class="form-control" id="titre" required> \
       <label for="ReleaseDate" class="col-form-label">Release date</label> \
-      <input type="date" class="form-control" id="ReleaseDate"> \
+      <input type="date" class="form-control" id="ReleaseDate" required> \
       <label for="rating" class="col-form-label">Rating</label> \
       <div class="rating"> \
         <input type="radio" name="rating" value="5" id="5"> \
@@ -343,38 +343,50 @@ type.addEventListener('change', function () {
 });
 
 
-
 document.getElementById('addBtn').addEventListener('click', function () {
-    let type = document.getElementById('myChoice');
-    let categoryChoice = type.options[type.selectedIndex].text;
-    let title = document.getElementById('titre').value;
-    let releaseDate = new Date(document.getElementById('ReleaseDate').value);
-    let rating = document.querySelector('input[name="rating"]:checked').value;
-    let image = document.getElementById('basic-url').value;
-    let newMedia;
-    if (categoryChoice == "Album") {
-        let artists = document.getElementById('artists').value;
-        let nbTracks = document.getElementById('nbTracks').value;
-        ewMedia = new Album(title, releaseDate, rating, image, artists, nbTracks);
-    } else if (categoryChoice == "Game") {
-        let studio = document.getElementById('studio').value;
-        let nbPlayers = document.getElementById('nbPlayers').value;
-        let plot = document.getElementById('plot').value;
-        newMedia = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
-        console.log(newGame);
-    } else if (categoryChoice == "Movie") {
-        let director = document.getElementById('director').value;
-        let actors = document.getElementById('actors').value;
-        let duration = document.getElementById('duration').value;
-        let plot = document.getElementById('plot').value;
-        newMedia = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
-    }
-    console.log(newMedia);
-    myCollection.add(newMedia);
-    myCollection.addMedia(newMedia);
-    displayCollection(myCollection);
-    removeListeners();
+
+     if (document.getElementById('titre').value == '') {
+         alert('Please enter a title');
+        } else if (document.getElementById('ReleaseDate').value == '') {
+            alert('Please enter a release date');
+    } else if (document.querySelector('input[name="rating"]:checked')?.value == undefined) {
+         alert('Please enter a rating');
+        } else if (document.getElementById('basic-url').value == '') {
+            alert('Please enter an URL');
+        } else {
+        let type = document.getElementById('myChoice');
+        let categoryChoice = type.options[type.selectedIndex].text;
+        let title = document.getElementById('titre').value;
+        let releaseDate = new Date(document.getElementById('ReleaseDate')?.value);
+        let rating = document.querySelector('input[name="rating"]:checked').value;
+        let image = document.getElementById('basic-url').value;
+
+        let newMedia;
+            if (categoryChoice == "Album") {
+                let artists = document.getElementById('artists').value;
+                let nbTracks = document.getElementById('nbTracks').value;
+                newMedia = new Album(title, releaseDate, rating, image, artists, nbTracks);
+            } else if (categoryChoice == "Game" && document.getElementById('studio').value != '' && document.getElementById('nbPlayers').value != '' && document.getElementById('platform').value != '') {
+                let studio = document.getElementById('studio').value;
+                let nbPlayers = document.getElementById('nbPlayers').value;
+                let plot = document.getElementById('plot').value;
+                newMedia = new Game(title, releaseDate, rating, image, studio, nbPlayers, plot);
+            } else if (categoryChoice == "Movie") {
+                let director = document.getElementById('director').value;
+                let actors = document.getElementById('actors').value;
+                let duration = document.getElementById('duration').value;
+                let plot = document.getElementById('plot').value;
+                newMedia = new Movie(title, releaseDate, rating, image, director, actors, duration, plot);
+            }
+            console.log(newMedia);
+            myCollection.add(newMedia);
+            myCollection.addMedia(newMedia);
+            displayCollection(myCollection);
+            removeListeners();
+        }
+    
 });
+
 
 function removeListeners() {
     let removeBtns = document.querySelectorAll('.remove-btn');
